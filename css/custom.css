@@ -1,0 +1,67 @@
+
+
+    /* rgb(241, 76, 76) */
+	.error {
+		box-shadow: 0 0 1px 1px#d92550;
+        border: 1px solid #d92550;
+		transition: 2s ease;
+	}
+    /* #3ac47d rgb(77, 214, 77) */
+	.success {
+		/* box-shadow: 0 0 1px 1px#3ac47d;
+        border: 1px solid #3ac47d; */
+        /* border-color: #a199e1;
+        outline: 0;
+        -webkit-box-shadow: 0 0 0 0.25rem rgba(66, 50, 194, 0.25);
+                box-shadow: 0 0 0 0.25rem rgba(66, 50, 194, 0.25); */
+		transition: 2s ease;
+	}
+
+    
+/*--------------------------------------------------------------
+# User picture
+--------------------------------------------------------------*/
+.profile-content .picture-container {
+    position: relative;
+    cursor: pointer;
+    text-align: center;
+    /* background: url(../img/instagram/Image-06.jpg); */
+  
+  }
+  .profile-content .picture {
+    width: 126px;
+    height: 126px;
+    /* color:#ffffff; */
+    background-color: #999999;
+    border: 4px solid #CCCCCC;
+    color: #FFFFFF;
+    border-radius: 25%;
+    margin: 5px auto;
+    overflow: hidden;
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    text-decoration: solid 2px rgb(255, 255, 255);
+  }
+  .profile-content .picture:hover {
+    border-color: #ff9d2c;
+  }
+  .profile-content .picture input[type="file"] {
+    cursor: pointer;
+    display: block;
+    height: 100%;
+    left: 0;
+    background: url(img/icons/logoWithBg.png);
+    opacity: 0 !important;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    
+  }
+  .profile-content .picture-src {
+    width: 100%;
+  }
+.logo_h{
+  height: 60px;
+  width: 120px;
+  /* background-size:contain; */
+}
