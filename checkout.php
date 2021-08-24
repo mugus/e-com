@@ -6,6 +6,7 @@
 ?>
 <!-- Header With CSS And Fonts Links End -->
 <?php
+// Get Products on cart
 $user_ip = $_SERVER['REMOTE_ADDR'];
 $c_sql = "SELECT * FROM pending_cart pc 
         LEFT JOIN paintings pai ON pc.pid = pai.pid 
@@ -22,6 +23,46 @@ $c_sql = "SELECT * FROM pending_cart pc
  $s_stmt = $db->prepare($s_sql);
  $s_stmt->execute(array('cart_code'=>$user_ip));
 
+
+//  insert into cart by click on place order
+if(isset($_POST['place_order'])){
+    $qty = $_POST['qty'];
+        $phone = $_POST['phone'];
+        $currency = "RWF";
+        $amount = $_POST['main_total'];
+        $tx_ref = round(83,386932).'67rtfMDtgiukj'.round(2,56295).'uDM'.round(2,56295).'uyrRG'.round(2,562595);
+        $network = "MTN";
+        $fullname = $_POST['lastname'].' '.$_POST['firstname'];
+    // $pid = $_POST['pid'];
+    // $cart_id = $_POST['cart_id'];
+    foreach($qty as $key => $value){
+        $qty = $value;
+        $pid = $_POST['pid'][$key];
+        $cart_id = $_POST['cart_id'][$key];
+        $delivery = $_POST['delivery'];
+        
+        $sql = "INSERT INTO cart (qty, pid, cart_id, delivery, phone) VALUES (:qty, :pid, :cart_id, :delivery, :phone)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute(
+            array(
+                'qty' => $qty,
+                'pid' => $pid,
+                'cart_id' => $cart_id,
+                'delivery' => $delivery,
+                'phone' => $phone
+            )
+        );
+        if($stmt->rowCount() > 0){
+            $sql = "DELETE FROM pending_cart WHERE cart_code =  :cart_code";
+            $stmt = $db->prepare($sql);
+            $stmt->execute(array('cart_code'=>$user_ip));
+
+        }else{
+            echo "Not Inserted";
+        }
+
+    }
+}
 ?>
 <body>
     <!-- NavBar Section start -->
@@ -46,7 +87,7 @@ $c_sql = "SELECT * FROM pending_cart pc
     <!-- Checkout Section Begin -->
     <section class="checkout spad">
         <div class="container">
-            <form action="#" class="checkout__form">
+            <form action="" method="POST" class="checkout__form">
                 <div class="row">
                     <div class="col-lg-8">
                         <h5>Billing detail</h5>
@@ -54,13 +95,13 @@ $c_sql = "SELECT * FROM pending_cart pc
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>First Name <span>*</span></p>
-                                    <input type="text">
+                                    <input type="text" name="firstname">
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>Last Name <span>*</span></p>
-                                    <input type="text">
+                                    <input type="text" name="lastname">
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -76,13 +117,13 @@ $c_sql = "SELECT * FROM pending_cart pc
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>Phone <span>*</span></p>
-                                    <input type="text" class="form-control">
+                                    <input type="number" class="form-control" name="phone" required />
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>Email <span>*</span></p>
-                                    <input type="text">
+                                    <input type="text" name="email">
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -117,6 +158,9 @@ $c_sql = "SELECT * FROM pending_cart pc
                                                 $sub_total = (int)$row['qty'] * (int)$row['price']
                                         ?>
                                             <li><?= $i ?>. <?= $row['name'] ?> (<i class="text-info"><?= $row['qty'] ?></i>) <span>Rwf <?= $sub_total ?></span></li>
+                                            <input type="hidden" value="<?= $row['pid'] ?>" name="pid[]" name="pid">
+                                            <input type="hidden" value="<?= $row['qty'] ?>" name="qty[]" name="qty">
+                                            <input type="hidden" value="<?= $row['id'] ?>" name="cart_id[]" name="cart_id">
                                         <?php $i++; endwhile ?>
                                     </ul>
                                 </div>
@@ -131,14 +175,19 @@ $c_sql = "SELECT * FROM pending_cart pc
                                         <li>Sub Total <span>Rwf <?= $res['all_total'] ?></span></li>
                                         <li>Delivery <span>Rwf <?= $delivery ?></span></li>
                                         <li>Total <span>Rwf <?= $main_total ?></span></li>
+                                        <input type="hidden" value="<?= $delivery ?>" name="delivery" name="delivery">
+                                        <input type="hidden" value="<?= $main_total ?>" name="main_total" name="main_total">
+
                                         <?php 
                                         }else{
                                             $delivery = 7500;
-                                            $main_total = $res['all_total'] + $delivery; 
+                                            $main_total = $res['all_total'] + $delivery;
                                         ?>
                                             <li>Sub Total <span>Rwf <?= $res['all_total'] ?></span></li>
                                             <li>Delivery <span>Rwf <?= $delivery ?></span></li>
                                             <li>Total <span>Rwf <?= $main_total ?></span></li>
+                                            <input type="hidden" value="<?= $delivery ?>" name="delivery" name="delivery">
+                                            <input type="hidden" value="<?= $main_total ?>" name="main_total" name="main_total">
                                         <?php } ?>
                                     </ul>
                                 </div>
@@ -154,7 +203,7 @@ $c_sql = "SELECT * FROM pending_cart pc
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
-                                <button type="submit" class="site-btn">Place oder</button>
+                                <button type="submit" class="site-btn" name="place_order">Place oder</button>
                             </div>
                         </div>
                     </div>
