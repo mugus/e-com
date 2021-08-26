@@ -27,12 +27,14 @@ $c_sql = "SELECT * FROM pending_cart pc
 //  insert into cart by click on place order
 if(isset($_POST['place_order'])){
     $qty = $_POST['qty'];
-        $phone = $_POST['phone'];
-        $currency = "RWF";
-        $amount = $_POST['main_total'];
-        $tx_ref = round(83,386932).'67rtfMDtgiukj'.round(2,56295).'uDM'.round(2,56295).'uyrRG'.round(2,562595);
-        $network = "MTN";
-        $fullname = $_POST['lastname'].' '.$_POST['firstname'];
+
+    $phone = $_POST['phone'];
+    $email = $_POST['email'];
+    $currency = "RWF";
+    $amount = $_POST['main_total'];
+    $tx_ref = round(83,386932).'67rtfMDtgiukj'.round(2,56295).'uDM'.round(2,56295).'uyrRG'.round(2,562595);
+    $network = "MTN";
+    $fullname = $_POST['lastname'].' '.$_POST['firstname'];
     // $pid = $_POST['pid'];
     // $cart_id = $_POST['cart_id'];
     foreach($qty as $key => $value){
@@ -56,12 +58,59 @@ if(isset($_POST['place_order'])){
             $sql = "DELETE FROM pending_cart WHERE cart_code =  :cart_code";
             $stmt = $db->prepare($sql);
             $stmt->execute(array('cart_code'=>$user_ip));
-
         }else{
             echo "Not Inserted";
         }
 
     }
+    $url = "https://api.flutterwave.com/v3/charges?type=mobile_money_rwanda";
+    $data_array = array(
+        'tx_ref' => $tx_ref,
+        'currency' => $currency,
+        'network' => $network,
+        'fullname' => $fullname,
+        'phone_number' => $phone,
+        'email' => $email,
+        'amount' => $amount
+    );
+    $data = http_build_query($data_array);
+    $header = array(
+        'Authorization: FLWSECK-2cde244f7c45bb66be982d47559e3003-X'
+    );
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+    $resp = curl_exec($ch);
+    if($e = curl_error($ch)){
+        echo $e;
+    }else{
+        $ins_sql = "INSERT INTO clients (fullname, phone_number, email, amount) VALUES (:fullname, :phone_number, :email, :amount)";
+        $ins_stmt = $db->prepare($ins_sql);
+        $ins_stmt->execute(
+            array(
+                'fullname' => $fullname,
+                'phone_number' => $phone,
+                'email' => $email,
+                'amount' => $amount
+                )
+        );
+        if($ins_stmt->rowCount() > 0){
+            $decoded = json_decode($resp, true);
+            $redirect = $decoded['meta']['authorization']['redirect'];
+            header('Location: '.$redirect);
+        }else{
+            echo "Order Failed";
+        }
+        
+    }
+    curl_close($ch);
+
+
+
 }
 ?>
 <body>
@@ -123,7 +172,7 @@ if(isset($_POST['place_order'])){
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>Email <span>*</span></p>
-                                    <input type="text" name="email">
+                                    <input type="text" name="email" required />
                                 </div>
                             </div>
                             <div class="col-lg-12">
