@@ -1,0 +1,25 @@
+RewriteEngine on
+
+RewriteRule ^login$ login.php
+RewriteRule ^register$ register.php
+RewriteRule ^logout$ logout.php
+RewriteRule ^index$ index.php
+RewriteRule ^profile$ profile.php
+RewriteRule ^report$ report.php
+RewriteRule ^request$ request.php
+RewriteRule ^reset_pass$ reset_pass.php
+RewriteRule ^verify$ verify.php
+RewriteRule ^forgot-password$ forgot-password.php
+RewriteRule ^cart$ cart.php
+RewriteRule ^faqs$ faqs.php
+RewriteRule ^send_invitation$ send_invitation.php
+RewriteRule ^search$ search.php
+RewriteRule ^checkout$ checkout.php
+RewriteRule ^shop$ shop.php
+
+
+
+# HTID:16580744: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+php_value display_errors 1
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:16580744:
+php_flag output_buffering on
