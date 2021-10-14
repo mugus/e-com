@@ -4,6 +4,34 @@ $(".alert").fadeTo(6000, 500).slideUp(2000, function (){
 });
 
 
+// get duplicated sizes input
+$('#btnAdd').click(function() {
+	let num = $('.clonedSection').length;
+	let newNum  = new Number(num + 1);
+	
+	let newSection = $('#clonedSection'+num).clone().attr('id', 'clonedSection'+newNum);
+	
+	newSection.children(':first').children(':first').attr('id', 'product_size' + newNum).attr('name', 'product_size' + newNum).attr('value', '' + newNum);
+	newSection.children(':nth-child(2)').children(':first').attr('id', 'price' + newNum).attr('name', 'price' + newNum).attr('value', '' + newNum);
+	newSection.children(':nth-child(2)').children(':first').attr('id', 'stock' + newNum).attr('name', 'stock' + newNum).attr('value', '' + newNum);
+
+	$('.clonedSection').last().append(newSection)
+	$('#btnDel').css('display','block');
+	
+});
+
+$('#btnDel').click(function() {
+	let num = $('.clonedSection').length; // how many "duplicatable" input fields we currently have
+	$('#clonedSection'+num).remove();     // remove the last element
+	
+	if (num-1 == 1)
+		$('#btnDel').css('display','none');
+});
+$('#btnDel').css('display','none');
+
+		
+
+// Add search box on select input
 $(document).ready(function () {
 	$('select').selectize({
 		sortField: 'text'
@@ -99,9 +127,9 @@ $(document).on('click', '.order_details', function(e){
 		data: {order_tx_ref:order_tx_ref},
 		// dataType: 'json',
 		success: function(response){
-			console.log('data of order ',response);
+			// console.log('data of order ',response.farmer_lastname);
 			$('#order_data').html(response)
-			// $('#name').html($('<span>',{text: response.product_name}));
+			$('#lastname').html($('<span>',{text: response.farmer_lastname}));
 		// 	$('#cart_id').val(response.cart_id);
 		// 	$('#names').html($('<span>',{text: response.name}));
 		// 	$('#price').html($('<span>',{text: response.price}));

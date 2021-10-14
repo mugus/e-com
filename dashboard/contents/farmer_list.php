@@ -1,7 +1,11 @@
 
-<div class="text-center text-info">
+<div class="float-left">
 	<h2>Manage farmers</h2>
 </div>
+<div class="float-right">
+	<a href="./exports/exportData.php" ><i class="fa fa-download"></i> Export to CSV</a>
+</div>
+
 
 <table id="farmer_table" class="display" cellspacing="0" width="100%">
 	<thead>

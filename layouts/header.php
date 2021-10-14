@@ -35,8 +35,7 @@ $farmers->execute(
 
 
 // get product
-$sql_pro = "SELECT p.product_id,p.name,p.cat_id,cat.cat_name,p.stock,p.price,
-p.man_date,p.exp_date,p.product_status,p.descriptions,p.photo,p.creation_date
+$sql_pro = "SELECT p.product_id,p.name,p.cat_id,cat.cat_name,p.descriptions,p.photo,p.creation_date
 FROM products p 
 LEFT JOIN categories cat ON cat.cat_id = p.cat_id";
 $stmt_pro = $db->prepare($sql_pro);
@@ -49,8 +48,8 @@ $stmt_category->execute();
 
 
 // get product for main cart
-$sql_cart = "SELECT c.qty,c.cart_id,c.user_id,p.product_id,p.name,p.cat_id,cat.cat_name,p.stock, ps.product_id, ps.id,ps.product_size,ps.price,
-p.man_date,p.exp_date,p.product_status,p.descriptions,p.photo,p.creation_date
+$sql_cart = "SELECT c.qty,c.cart_id,c.user_id,p.product_id,p.name,p.cat_id,cat.cat_name,ps.stock, ps.product_id, 
+ps.id,ps.product_size,ps.price,ps.man_date,ps.exp_date,p.descriptions,p.photo,p.creation_date
 FROM cart c 
 LEFT JOIN products p ON c.product_id = p.product_id
 LEFT JOIN products_size ps ON c.ps_id = ps.id
@@ -65,8 +64,8 @@ $stmt_cart->execute(
 
 
 // get product for nav cart
-$sql_navcart = "SELECT c.qty,c.cart_id,c.user_id,p.product_id,p.name,p.cat_id,cat.cat_name,p.stock, ps.product_id, ps.id,ps.product_size,ps.price,
-p.man_date,p.exp_date,p.product_status,p.descriptions,p.photo,p.creation_date
+$sql_navcart = "SELECT c.qty,c.cart_id,c.user_id,p.product_id,p.name,p.cat_id,cat.cat_name,ps.stock, 
+ps.product_id, ps.id,ps.product_size,ps.price, ps.man_date,ps.exp_date,p.descriptions,p.photo,p.creation_date
 FROM cart c 
 LEFT JOIN products p ON c.product_id = p.product_id
 LEFT JOIN products_size ps ON c.ps_id = ps.id
@@ -123,6 +122,8 @@ if(isset($_POST['place_order'])){
   $tx_ref =  uniqid().'d'.rand(100,316768).'0wio'.uniqid().'nj'.uniqid().'eu2'.rand(100,316768).'kkiz'.uniqid();
   $network = "MTN";
   $fullname = $_POST['fullname'];
+  $coop_id = $_POST['coop_id'];
+
   // $fullname = $_POST['lastname'].' '.$_POST['firstname'];
   $url = "https://api.flutterwave.com/v3/charges?type=mobile_money_rwanda";
   $data_array = array(
@@ -177,20 +178,24 @@ if(isset($_POST['place_order'])){
         $farmer_phone = $_POST['farmer_phone'];
         $coop_address = $_POST['coop_address'];
         $coop_phone = $_POST['coop_phone'];
+        // $coop_id = $_POST['coop_id'];
         $farmer_reg_no = $_POST['farmer_reg_no'];
-        $sql = "INSERT INTO orders (user_id, product_id, qty, ps_id, farmer_address, coop_phone,coop_address,tx_ref,farmer_phone, farmer_reg_no) 
-                VALUES (:user_id, :product_id, :qty, :ps_id, :farmer_address, :coop_phone,:coop_address,:tx_ref,:farmer_phone, :farmer_reg_no)";
+        $sql = "INSERT INTO orders (user_id, product_id, qty, ps_id, coop_id, tx_ref, farmer_reg_no) 
+                VALUES (:user_id, :product_id, :qty, :ps_id, :coop_id, :tx_ref, :farmer_reg_no)";
+        // $sql = "INSERT INTO orders (user_id, product_id, qty, ps_id, coop_id, farmer_address, coop_phone,coop_address,tx_ref,farmer_phone, farmer_reg_no) 
+        // VALUES (:user_id, :product_id, :qty, :ps_id, :coop_id, :farmer_address, :coop_phone,:coop_address,:tx_ref,:farmer_phone, :farmer_reg_no)";
         $statement = $db->prepare($sql);
         // $stmt->execute();
         $statement->bindValue(':user_id', $row['user_id']);
         $statement->bindValue(':qty', $row['qty']);
         $statement->bindValue(':product_id', $row['product_id']);
         $statement->bindValue(':ps_id', $row['ps_id']);
-        $statement->bindValue(':farmer_address', $farmer_address);
-        $statement->bindValue(':farmer_phone', $farmer_phone);
-        $statement->bindValue(':coop_address', $coop_address);
+        $statement->bindValue(':coop_id', $coop_id);
+        // $statement->bindValue(':farmer_address', $farmer_address);
+        // $statement->bindValue(':farmer_phone', $farmer_phone);
+        // $statement->bindValue(':coop_address', $coop_address);
         $statement->bindValue(':tx_ref', $tx_ref);
-        $statement->bindValue(':coop_phone', $coop_phone);
+        // $statement->bindValue(':coop_phone', $coop_phone);
         $statement->bindValue(':farmer_reg_no', $farmer_reg_no);
         $statement->execute();
         // remove cart items
@@ -266,11 +271,11 @@ if(isset($_POST['place_order'])){
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Shop :: Ingabo PlantHealth</title>
+    <title>Shop :: Ingabo HealthPlant</title>
     <meta name="description" content="description">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="./assets/images/logo.png"/>
     <!-- Plugins CSS -->
     <link rel="stylesheet" href="assets/css/plugins.css">
     <!-- Bootstap CSS -->
@@ -280,8 +285,7 @@ if(isset($_POST['place_order'])){
     <link rel="stylesheet" href="assets/css/responsive.css">
     <!-- <link rel="stylesheet" href="assets/css/tabledata/jquery.dataTables.min.css"> -->
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"/>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" /> -->
  
 
   </head>

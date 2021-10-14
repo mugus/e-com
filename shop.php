@@ -1,6 +1,6 @@
 <?php
   session_start();
-  if(isset($_SESSION['un_id']) AND isset($_SESSION['user_role'])){
+  if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
 include('./database/db.php');
 
 
@@ -182,7 +182,7 @@ include('./layouts/header.php'); ?>
                                         <select onchange="load_price()" name="ps_id" class="form-control" id="size"
                                             style="height:30px!important; padding-top:2px;font-size:15px;"
                                             title="Make size by your choice" required>
-                                            <option value="" selected hidden>Select Size</option>
+                                            <option value="">Select Size</option>
                                             <?php  while($response = $sizes->fetch(PDO::FETCH_ASSOC)): ?>
                                             <option value="<?= $response['id'] ?>">
                                                 <?= $response['product_size'].' : '.$response['price'].' Rwf' ?>
@@ -224,11 +224,11 @@ include('./layouts/header.php'); ?>
                         </div>
                     </div>
                 </div>
-                <div class="infinitpaginOuter">
+                <!-- <div class="infinitpaginOuter">
                     <div class="infinitpagin">
                         <a href="#" class="btn loadMore">Load More</a>
                     </div>
-                </div>
+                </div> -->
             </div>
             <!--End Main Content-->
         </div>

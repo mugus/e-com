@@ -2,7 +2,7 @@
 session_start();
 
 include('./database/db.php');
-if(isset($_SESSION['un_id'])){
+if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
 
 
 
@@ -39,7 +39,7 @@ include('./layouts/navbar.php');
               <div class="row">
                 <div class="form-group col-md-12 col-lg-12 col-xl-12 required">
                   <label for="input-firstname">Select Coop to Checkout <span class="required-f">*</span></label>
-                  <select name="coop_opt" id="coop_opt" onchange="load_coop_info()" required>
+                  <select name="coop_id" id="coop_opt" onchange="load_coop_info()" required>
                     <option value="">Choose Coop</option>
                     <?php while($row = $coops->fetch(PDO::FETCH_ASSOC)): ?>
                       <option value="<?= $row['coop_id'] ?>"><?= $row['coop_name'].' ('.$row['district'].'->'.$row['sector'].'->'.$row['cell'].')' ?></option>

@@ -1,0 +1,47 @@
+<h2>Shipped Orders</h2>
+<?php
+$sq = "SELECT * FROM payments p WHERE p.verified = 1 AND p.sales_status = 1 ORDER BY p.paid_on DESC";
+$pay_st = $db->prepare($sq);
+$pay_st->execute();
+?>
+
+
+
+
+<table id="farmer_table" class="display" cellspacing="0" width="99%">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Farmer Names</th>
+			<th>Phone N<sup>o</sup> </th>
+			<th>Email(Agent)</th>
+			<th>Amount</th>
+			<th>View</th>
+		</tr>
+	</thead>
+
+	<tbody>
+    <?php if($pay_st->rowCount() > 0): ?>
+		<?php $i=1; foreach($pay_st as $res): ?>
+		<tr>
+			<td><?= $i ?></td>
+			<td><?= $res['fullname'] ?></td>
+			<td><?= $res['phone'] ?></td>
+			<td><?= $res['email'] ?></td>
+			<td>Rwf <?= $res['amount'] ?></td>
+			<td>
+				<a href="" class="order_details btn" data-toggle="modal" data-target="#order_details" data-id="<?= $res['tx_ref'] ?>">
+                    <span class="fa fa-eye"></span>
+				</a>
+				
+			</td>
+		</tr>
+		<?php $i++; endforeach ?>
+		<?php else: ?>
+      <tr>
+        <td colspan="9">No Order found</td>
+      </tr>
+		<?php endif ?>
+	</tbody>
+</table>
+

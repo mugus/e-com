@@ -2,7 +2,7 @@
   session_start();
 
 include('./database/db.php');
-if(isset($_SESSION['un_id'])){
+if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
 
 
 
@@ -54,7 +54,8 @@ include('./layouts/navbar.php');
                   </div>
 
                   <div class="cart__meta-text">
-                    Category: <?= $row['cat_name'] ?><br>
+                    Size: <?= $row['product_size'] ?><br>
+                    Category: <?= $row['cat_name'] ?>
                   </div>
                 </td>
                 <td class="cart__price-wrapper cart-flex-item">

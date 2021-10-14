@@ -5,17 +5,14 @@
       <div class="modal-header">
         <h2 class="modal-title">Order Details</h2>
       </div>
-      <div class="container">
+      <div class="container" style="overflow:scroll; height:500px;">
         <div class="row">
           <div id="order_data" style="font-size: 15px"></div>
-          <?php
-          // $quer = "SELECT SUM(o.qty * ps.price) AS total FROM orders o 
-          //           LEFT JOIN payments pa ON o.tx_ref = pa.tx_ref
-          //           WHERE o.tx_ref  = :tx_ref";
-          ?>
+
         </div>
+
       </div>
-    
+      <!-- <input type="button" value="click" onclick="printDiv()"> -->
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>

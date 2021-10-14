@@ -2,7 +2,7 @@
   session_start();
   include('../database/db.php');
 
-  if(isset($_SESSION['un_id']) AND isset($_SESSION['user_role'])){
+  if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
 ?>
 
 

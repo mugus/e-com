@@ -17,10 +17,11 @@ $farmers->execute();
 // $user = $users->fetch(PDO::FETCH_ASSOC);
 
 // get product
-$sql_pro = "SELECT p.product_id,p.name,p.cat_id,cat.cat_name,p.stock,p.price,
-            p.man_date,p.exp_date,p.product_status,p.descriptions,p.photo,p.creation_date
+$sql_pro = "SELECT p.product_id,p.name,p.cat_id,cat.cat_name,ps.stock,ps.price,
+                ps.man_date,ps.exp_date,p.descriptions,p.photo,p.creation_date
             FROM products p 
-            LEFT JOIN categories cat ON cat.cat_id = p.cat_id";
+            LEFT JOIN categories cat ON cat.cat_id = p.cat_id
+            LEFT JOIN products_size ps ON ps.product_id = p.product_id";
 $stmt_pro = $db->prepare($sql_pro);
 $stmt_pro->execute();
 
@@ -108,10 +109,20 @@ $stmt_category->execute();
 
 
 
-
-    // if ($paymentStatus == 'success') {
-  
-    // echo $tx_ref;
+// Ship the order
+    if (isset($_GET['id'])) {
+      // echo "ID :".$_GET['id'];
+      $sql = "UPDATE payments p SET p.sales_status = 1 WHERE p.id = :id";
+      $stmt = $db->prepare($sql);
+      $stmt->execute(
+        array(
+          'id'=>$_GET['id']
+        )
+      );
+      if($stmt->rowCount() > 0){
+        echo "<script>alert('Order is added on Shipped orders');</script>";
+      }
+    }
 
 ?>
 <!DOCTYPE html>
@@ -121,11 +132,11 @@ $stmt_category->execute();
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Shop :: Ingabo PlantHealth</title>
+    <title>Shop :: Ingabo HealthPlant</title>
     <meta name="description" content="description">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" href="../assets/images/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logo.png"/>
     <!-- Plugins CSS -->
     <link rel="stylesheet" href="../assets/css/plugins.css">
     <!-- Bootstap CSS -->

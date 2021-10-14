@@ -11,7 +11,7 @@
 			<th>Phone N<sup>o</sup> </th>
 			<th>Email(Agent)</th>
 			<th>Amount</th>
-			<th></th>
+			<th>Verify Payments</th>
 		</tr>
 	</thead>
 
@@ -34,7 +34,7 @@
 					</a>
 				<?php else: ?>
 					<a href="#" class="btn">
-						<span class="fa fa-check"></span>Verified(Confirm Shipping)
+						<span class="fa fa-check"></span>Shipping
 					</a>
 				<?php endif ?>
 				

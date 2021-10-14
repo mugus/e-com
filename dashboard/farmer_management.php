@@ -1,6 +1,6 @@
 <?php
   session_start();
-  if(isset($_SESSION['un_id']) AND isset($_SESSION['user_role'])){
+  if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
   include('./layouts/header.php');
  ?>
 

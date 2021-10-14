@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2021 at 05:16 PM
+-- Generation Time: Oct 14, 2021 at 11:01 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.3.31
 
@@ -53,7 +53,8 @@ CREATE TABLE `categories` (
 
 INSERT INTO `categories` (`cat_id`, `cat_name`, `descriptions`) VALUES
 (1, 'Pesticides', ''),
-(2, 'Fertilizers', '');
+(2, 'Fertilizers', ''),
+(3, 'Fungicides', '');
 
 -- --------------------------------------------------------
 
@@ -112,9 +113,8 @@ CREATE TABLE `farmers` (
 --
 
 INSERT INTO `farmers` (`farmer_id`, `farmer_reg_no`, `farmer_firstname`, `farmer_lastname`, `province`, `district`, `sector`, `cell`, `village`, `farmer_address`, `farmer_phone`, `farmer_landsize`, `farmer_product_season_A`, `farmer_product_season_B`, `farmer_product_season_C`, `created_at`) VALUES
-(1, 'INGABO-67969', 'mugus', 'ali', 'south', 'nyamagabe', 'tare', 'gasarenda', 'kagarama', 0, '', '120', '', '', '', '2021-10-04 12:21:46'),
-(2, 'INGABO-02054', 'Gustave', 'MUHOZA', 'Washington', 'rykljrpyj', 'erpyjperj', '', 'wtupjwp', NULL, '546788804330', '33', '', '', '', '2021-10-04 13:05:33'),
-(6, 'INGABO-87472524', 'Christian', 'Ishimwe', 'Kigali', 'Kicukiro', 'Masaka', '', 'Cyiza', NULL, '0733194591', '120', '', '', '', '2021-10-04 14:41:36');
+(8, 'INGABO-14425597', 'Abdul', 'Baari', 'North', 'Musanze', 'Muhoza', 'Musanze', 'Muhoza', NULL, '0787848876', '75', 'vegetable', 'wheat', 'vegetable', '2021-10-13 11:04:29'),
+(9, 'INGABO-06251858', 'Gustave', 'MUHOZA', 'Kigali', 'Kicukiro', 'Kagarama', 'Urugero', 'Rukatsa', NULL, '0788804330', '560', 'wheat', 'wheat', 'vegetable', '2021-10-13 12:44:24');
 
 -- --------------------------------------------------------
 
@@ -148,9 +148,8 @@ CREATE TABLE `orders` (
   `coop_address` varchar(255) NOT NULL,
   `coop_phone` varchar(255) NOT NULL,
   `farmer_reg_no` varchar(255) NOT NULL,
-  `tranaction_id` varchar(255) DEFAULT NULL,
+  `coop_id` int(11) NOT NULL,
   `tx_ref` varchar(255) NOT NULL,
-  `sales_status` int(11) NOT NULL,
   `due_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -158,12 +157,12 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`sales_id`, `user_id`, `product_id`, `ps_id`, `qty`, `farmer_address`, `farmer_phone`, `coop_address`, `coop_phone`, `farmer_reg_no`, `tranaction_id`, `tx_ref`, `sales_status`, `due_date`) VALUES
-(1, 6154246, 5, 11, 1, 'Masaka, , Cyiza', '0733194591', 'Tare, Gasarenda, Kagarama', '78984565', 'INGABO-87472524', NULL, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 11:23:27'),
-(2, 6154246, 2, 8, 1, 'Masaka, , Cyiza', '0733194591', 'Tare, Gasarenda, Kagarama', '78984565', 'INGABO-87472524', NULL, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 11:23:27'),
-(3, 6154246, 2, 7, 1, 'erpyjperj, , wtupjwp', '546788804330', 'Tare, Gasarenda, Kagarama', '78984565', 'INGABO-02054', NULL, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-07 14:10:34'),
-(4, 6154246, 1, 2, 3, 'erpyjperj, , wtupjwp', '546788804330', 'Tare, Gasarenda, Kagarama', '78984565', 'INGABO-02054', NULL, '615f0339beef3d1453740wio615f0339bef06nj615f0339bef0beu263115kkiz615f0339bef0e', 0, '2021-10-07 14:25:01'),
-(5, 6154246, 3, 4, 1, 'erpyjperj, , wtupjwp', '546788804330', 'Tare, Gasarenda, Kagarama', '78984565', 'INGABO-02054', NULL, '615f0339beef3d1453740wio615f0339bef06nj615f0339bef0beu263115kkiz615f0339bef0e', 0, '2021-10-07 14:25:01');
+INSERT INTO `orders` (`sales_id`, `user_id`, `product_id`, `ps_id`, `qty`, `farmer_address`, `farmer_phone`, `coop_address`, `coop_phone`, `farmer_reg_no`, `coop_id`, `tx_ref`, `due_date`) VALUES
+(1, 6154246, 25, 1, 2, '', '', '', '', 'INGABO-14425597', 1, '6166bd72606e4d177110wio6166bd72606fcnj6166bd72606feeu2204546kkiz6166bd7260704', '2021-10-13 11:05:28'),
+(2, 6154246, 26, 4, 5, '', '', '', '', 'INGABO-14425597', 1, '6167e1cf7a11bd1784050wio6167e1cf7a130nj6167e1cf7a132eu2228241kkiz6167e1cf7a135', '2021-10-14 07:52:53'),
+(3, 6154246, 27, 5, 1, '', '', '', '', 'INGABO-14425597', 1, '6167e1cf7a11bd1784050wio6167e1cf7a130nj6167e1cf7a132eu2228241kkiz6167e1cf7a135', '2021-10-14 07:52:53'),
+(4, 6154246, 25, 1, 2, '', '', '', '', 'INGABO-06251858', 1, '6167e9ae43c0ed852650wio6167e9ae43c24nj6167e9ae43c27eu268057kkiz6167e9ae43c2a', '2021-10-14 08:26:43'),
+(5, 6154246, 26, 4, 3, '', '', '', '', 'INGABO-06251858', 1, '6167e9ae43c0ed852650wio6167e9ae43c24nj6167e9ae43c27eu268057kkiz6167e9ae43c2a', '2021-10-14 08:26:43');
 
 -- --------------------------------------------------------
 
@@ -179,6 +178,7 @@ CREATE TABLE `payments` (
   `amount` int(11) NOT NULL,
   `tx_ref` varchar(255) NOT NULL,
   `verified` int(11) NOT NULL DEFAULT 0,
+  `sales_status` int(11) NOT NULL DEFAULT 0,
   `paid_on` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -186,24 +186,10 @@ CREATE TABLE `payments` (
 -- Dumping data for table `payments`
 --
 
-INSERT INTO `payments` (`id`, `fullname`, `phone`, `email`, `amount`, `tx_ref`, `verified`, `paid_on`) VALUES
-(1, 'MUHOZA Gustave', '0788345538', 'muhozagustave1213@gmail.com', 22000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 09:27:30'),
-(2, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 22000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 09:49:13'),
-(3, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 22000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 09:50:47'),
-(4, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 22000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 09:52:50'),
-(5, 'Ishimwe Christian', '0788804330', 'muhozagustave1213@gmail.com', 22000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 09:57:13'),
-(6, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 22000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:06:45'),
-(7, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 22000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:09:44'),
-(8, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 22000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:11:50'),
-(9, 'Ishimwe Christian', '0788804330', 'muhozagustave1213@gmail.com', 10000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:44:41'),
-(10, 'Ishimwe Christian', '0788804330', 'muhozagustave1213@gmail.com', 10000, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:44:44'),
-(11, 'Ishimwe Christian', '0788804330', 'muhozagustave1213@gmail.com', 9600, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:46:55'),
-(12, 'Ishimwe Christian', '0788804330', 'muhozagustave1213@gmail.com', 9600, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:47:23'),
-(13, 'Ishimwe Christian', '0788804330', 'muhozagustave1213@gmail.com', 49450, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:50:17'),
-(14, 'ali mugus', '0788804330', 'muhozagustave1213@gmail.com', 3800, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 10:52:10'),
-(15, 'Ishimwe Christian', '0788804330', 'muhozagustave1213@gmail.com', 10450, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-06 11:23:27'),
-(16, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 4500, '8367rtfM2Dtgiukj2uDM2uyrRG2', 0, '2021-10-07 14:10:34'),
-(17, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 4150, '615f0339beef3d1453740wio615f0339bef06nj615f0339bef0beu263115kkiz615f0339bef0e', 0, '2021-10-07 14:25:01');
+INSERT INTO `payments` (`id`, `fullname`, `phone`, `email`, `amount`, `tx_ref`, `verified`, `sales_status`, `paid_on`) VALUES
+(1, 'Baari Abdul', '0788804330', 'muhozagustave1213@gmail.com', 6000, '6166bd72606e4d177110wio6166bd72606fcnj6166bd72606feeu2204546kkiz6166bd7260704', 0, 0, '2021-10-13 11:05:28'),
+(2, 'Baari Abdul', '0788804330', 'muhozagustave1213@gmail.com', 21000, '6167e1cf7a11bd1784050wio6167e1cf7a130nj6167e1cf7a132eu2228241kkiz6167e1cf7a135', 1, 1, '2021-10-14 07:52:53'),
+(3, 'MUHOZA Gustave', '0788804330', 'muhozagustave1213@gmail.com', 13200, '6167e9ae43c0ed852650wio6167e9ae43c24nj6167e9ae43c27eu268057kkiz6167e9ae43c2a', 1, 1, '2021-10-14 08:26:43');
 
 -- --------------------------------------------------------
 
@@ -215,12 +201,6 @@ CREATE TABLE `products` (
   `product_id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
   `cat_id` int(11) NOT NULL,
-  `stock` int(11) NOT NULL,
-  `price` int(11) NOT NULL,
-  `product_size` int(11) NOT NULL,
-  `man_date` date NOT NULL,
-  `exp_date` date NOT NULL,
-  `product_status` varchar(110) NOT NULL DEFAULT 'New',
   `descriptions` varchar(255) NOT NULL,
   `photo` varchar(255) NOT NULL,
   `creation_date` timestamp NOT NULL DEFAULT current_timestamp()
@@ -230,12 +210,10 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `name`, `cat_id`, `stock`, `price`, `product_size`, `man_date`, `exp_date`, `product_status`, `descriptions`, `photo`, `creation_date`) VALUES
-(1, 'JackMax', 1, 120, 2500, 0, '2021-10-01', '2021-11-01', 'New', 'jackmax gdwqugjackmaxjackmaxjackmaxjackmaxjackmaxjackmaxjackmaxjackmaxjackmaxjackmaxjackmaxjackmaxjackmaxjackmax', 'JackMax_1_1633090011.jpg', '2021-10-01 12:06:51'),
-(2, 'Romaxtyn', 1, 95, 2000, 0, '2021-02-01', '2022-04-30', 'New', 'Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn Romaxtyn ', 'Romaxtyn_1_1633090194.jpg', '2021-10-01 12:09:54'),
-(3, 'GliderMax', 1, 57, 1500, 0, '2021-05-01', '2022-04-10', 'New', 'GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax GliderMax Glide', 'GliderMax_1_1633090277.jpg', '2021-10-01 12:11:17'),
-(4, 'MillMax Gold', 2, 25, 3000, 0, '2021-02-01', '2023-06-30', 'New', 'MillMax MillMax MillMaxMillMaxMillMaxMillMax MillMaxMillMax MillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMaxMillMax', 'MillMax_2_1633090674.jpg', '2021-10-01 12:17:54'),
-(5, 'CopperMax', 2, 100, 4000, 0, '2021-03-01', '2022-02-28', 'New', 'CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax CopperMax Coppe', 'CopperMax_2_1633090742.jpg', '2021-10-01 12:19:02');
+INSERT INTO `products` (`product_id`, `name`, `cat_id`, `descriptions`, `photo`, `creation_date`) VALUES
+(25, 'SPERFEED CALCIUM', 2, 'SPERFEED CALCIUM', 'SPERFEED CALCIUM_2_1634120133.jpg', '2021-10-13 10:15:33'),
+(26, 'COPPERMAX', 3, 'copper hydroxide 50% WP', 'COPPERMAX_3_1634136769.jpg', '2021-10-13 14:52:49'),
+(27, 'DELTAMAX', 1, 'DELTAMAX deltamethrin 25EC', 'DELTAMAX_1_1634197259.jpg', '2021-10-14 07:40:59');
 
 -- --------------------------------------------------------
 
@@ -247,26 +225,21 @@ CREATE TABLE `products_size` (
   `id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `product_size` varchar(255) NOT NULL,
-  `price` varchar(255) NOT NULL
+  `price` varchar(255) NOT NULL,
+  `stock` varchar(255) NOT NULL,
+  `man_date` varchar(255) NOT NULL,
+  `exp_date` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `products_size`
 --
 
-INSERT INTO `products_size` (`id`, `product_id`, `product_size`, `price`) VALUES
-(1, 1, '1L', '9000'),
-(2, 1, '100ML', '1000'),
-(3, 3, '1L', '9700'),
-(4, 3, '100ML', '1150'),
-(5, 3, '500ML', '5000'),
-(6, 2, '1L', '9000'),
-(7, 2, '500ML', '4500'),
-(8, 2, '100ML', '950'),
-(9, 4, '1Kg', '13100'),
-(10, 4, '250Gr', '3800'),
-(11, 5, '1Kg', '9500'),
-(12, 5, '250Gr', '2400');
+INSERT INTO `products_size` (`id`, `product_id`, `product_size`, `price`, `stock`, `man_date`, `exp_date`) VALUES
+(1, 25, '1 Kg', '3000', '666', '2021-10-14', '2021-10-15'),
+(3, 26, '1 Kg', '9500', '100', '2021-10-01', '2023-02-28'),
+(4, 26, '250Gr', '2400', '150', '2021-06-01', '2022-03-31'),
+(5, 27, '1L', '9000', '100', '2021-10-01', '2021-10-31');
 
 -- --------------------------------------------------------
 
@@ -295,7 +268,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `firstname`, `lastname`, `email`, `phone_number`, `address`, `password`, `status_code`, `user_role`, `join_date`, `un_id`) VALUES
 (1, 'Gustave', 'MUHOZA', 'muhozagustave1213@gmail.com', '0788804330', 'KG 655', '$2y$10$0ko9tkdvmX9K8V9GhSzZCOIqGO2iOQM8OLgeDJhtinDmgl4y3huuu', 1, 1, '2021-09-29 08:31:41', '6154246da0aef'),
 (2, 'Gustave', 'MUHOZA', 'aba1remy@gmail.com', '0788804330', 'KG 655', '$2y$10$oAVdADCXOzrxk5QpXf6LheqUpckiwXPTshuwHgX5/jHQI9KgEx6SW', 0, 0, '2021-09-29 08:45:13', '615427998fe47'),
-(3, 'ISHIWME', 'Christian', 'ishimwechristian71@gmail.com', '0788345538', 'Kn 34 Street, Kigali, Rwanda', '$2y$10$/jd2FfUhC0ucZ3JiE8GAReRQxROI/T5hC8Pj66w0HBQqFnbzNTFIS', 1, 1, '2021-09-30 14:30:22', '6155c9fe6ee841302716155c9fe6ee986155c9fe6ee9a780936155c9fe6ee9c');
+(3, 'ISHIWME', 'Christian', 'ishimwechristian71@gmail.com', '0788345538', 'Kn 34 Street, Kigali, Rwanda', '$2y$10$/jd2FfUhC0ucZ3JiE8GAReRQxROI/T5hC8Pj66w0HBQqFnbzNTFIS', 1, 1, '2021-09-30 14:30:22', '6155c9fe6ee841302716155c9fe6ee986155c9fe6ee9a780936155c9fe6ee9c'),
+(7, 'tytyne', 'ali', 'mugus@gmail.com', '0781449311', 'kicukiro', '$2y$10$eHmAHEsvs1NHexp6sqASIuUCT9X.4GO903elqd1kSkmLmYC0SxGLK', 0, 3, '2021-10-11 07:46:47', '6163ebe74d96a1182846163ebe74d9826163ebe74d9831292846163ebe74d985'),
+(8, 'Accountant', 'Test', 'test@gmail.com', '6128506070', 'KG 655', '$2y$10$1y.7AFEj7Ci/q4qoaKEA4ePlWkvEFCF1EuO3UPCcL6srbShOwh2Fi', 0, 2, '2021-10-11 08:34:10', '6163f7020ff462944476163f7020ff586163f7020ff592610206163f7020ff5a');
 
 -- --------------------------------------------------------
 
@@ -334,8 +309,10 @@ CREATE TABLE `user_roles` (
 --
 
 INSERT INTO `user_roles` (`id`, `role_code`, `role_name`) VALUES
-(1, 0, 'client'),
-(2, 1, 'admin');
+(1, 0, 'Client'),
+(2, 1, 'Admin'),
+(3, 2, 'Accountant'),
+(4, 3, 'Warehouse Keeper');
 
 --
 -- Indexes for dumped tables
@@ -396,8 +373,7 @@ ALTER TABLE `payments`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`product_id`),
-  ADD KEY `cat_id` (`cat_id`),
-  ADD KEY `product_size` (`product_size`);
+  ADD KEY `cat_id` (`cat_id`);
 
 --
 -- Indexes for table `products_size`
@@ -442,7 +418,7 @@ ALTER TABLE `cart`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cooperatives`
@@ -454,7 +430,7 @@ ALTER TABLE `cooperatives`
 -- AUTO_INCREMENT for table `farmers`
 --
 ALTER TABLE `farmers`
-  MODIFY `farmer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `farmer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `farmer_address`
@@ -472,25 +448,25 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `products_size`
 --
 ALTER TABLE `products_size`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `userstatus`
@@ -502,7 +478,7 @@ ALTER TABLE `userstatus`
 -- AUTO_INCREMENT for table `user_roles`
 --
 ALTER TABLE `user_roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables

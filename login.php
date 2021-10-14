@@ -14,11 +14,20 @@ if(isset($_POST['login'])){
 		if(password_verify($password, $row['password'])){
       $user_role = $row['user_role'];
       $un_id = $row['un_id'];
-      $_SESSION['un_id']=$un_id;
-      $_SESSION['user_role'] = $user_role;
+     
 			if($user_role == 1){
+        $_SESSION['un_id']=$un_id;
+        $_SESSION['user_role'] = $user_role;
 				header("location: ./dashboard");
-			}else{
+			}else if($user_role == 2){
+        $_SESSION['un_id']=$un_id;
+        $_SESSION['user_role'] = $user_role;
+				header("location: ./dashboard/accountant.index.php");
+      }else if($user_role == 3){
+        $_SESSION['un_id']=$un_id;
+        $_SESSION['user_role'] = $user_role;
+				header("location: ./dashboard/warehouse.index.php");
+      }else{
 				// header("location: ./shop");
         $result = "<small>Your account is not allowed to shop. <br>Contact Ingabo PlantHealth Administration</small>";
         $alert = "alert-danger";
@@ -45,11 +54,11 @@ if(isset($_POST['login'])){
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Shop :: Ingabo PlantHealth</title>
+    <title>Shop :: Ingabo HealthPlant</title>
     <meta name="description" content="description">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="./assets/images/logo.png"/>
     <!-- Plugins CSS -->
     <link rel="stylesheet" href="assets/css/plugins.css">
     <!-- Bootstap CSS -->

@@ -2,7 +2,7 @@
   session_start();
 include('../database/db.php');
 
-  if(isset($_SESSION['un_id']) AND isset($_SESSION['user_role'])){
+  if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
 
 
 
@@ -22,9 +22,9 @@ include('../database/db.php');
       $farmer_product_season_B = htmlspecialchars(strip_tags($_POST['farmer_product_season_B']));
       $farmer_product_season_C = htmlspecialchars(strip_tags($_POST['farmer_product_season_C']));
 
-      $sql = "INSERT INTO farmers (farmer_firstname,farmer_lastname,farmer_reg_no, province, district, sector, village, farmer_phone,farmer_landsize,farmer_product_season_A,farmer_product_season_B, farmer_product_season_C) 
+      $sql = "INSERT INTO farmers (farmer_firstname,farmer_lastname,farmer_reg_no, province, district, sector, cell, village, farmer_phone,farmer_landsize,farmer_product_season_A,farmer_product_season_B, farmer_product_season_C) 
               VALUES
-              (:farmer_firstname,:farmer_lastname,:farmer_reg_no,:province, :district, :sector, :village, :farmer_phone,:farmer_landsize,:farmer_product_season_A,:farmer_product_season_B, :farmer_product_season_C)";
+              (:farmer_firstname,:farmer_lastname,:farmer_reg_no,:province, :district, :sector, :village, :cell, :farmer_phone,:farmer_landsize,:farmer_product_season_A,:farmer_product_season_B, :farmer_product_season_C)";
       $stmt = $db->prepare($sql);
 
       $stmt->execute(
@@ -35,6 +35,7 @@ include('../database/db.php');
           'district'=> $district,
           'province'=> $province,
           'sector'=> $sector,
+          'cell'=> $cell,
           'village'=> $village,
           'farmer_phone'=> $farmer_phone,
           'farmer_landsize'=> $farmer_landsize,

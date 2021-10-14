@@ -2,7 +2,7 @@
   session_start();
 include('../database/db.php');
 
-  if(isset($_SESSION['un_id']) AND isset($_SESSION['user_role'])){
+  if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
 
   // if(isset($_SESSION['un_id'])){
     $sql_cat = "SELECT * FROM categories";
@@ -12,10 +12,10 @@ include('../database/db.php');
     if(isset($_POST['add_new_product'])){
       $name = htmlspecialchars(strip_tags($_POST['name']));
       $cat_id = htmlspecialchars(strip_tags($_POST['cat_id']));
-      $price = htmlspecialchars(strip_tags($_POST['price']));
-      $stock = htmlspecialchars(strip_tags($_POST['stock']));
-      $man_date = htmlspecialchars(strip_tags($_POST['man_date']));
-      $exp_date = htmlspecialchars(strip_tags($_POST['exp_date']));
+      // $price = htmlspecialchars(strip_tags($_POST['price']));
+      // $stock = htmlspecialchars(strip_tags($_POST['stock']));
+      // $man_date = htmlspecialchars(strip_tags($_POST['man_date']));
+      // $exp_date = htmlspecialchars(strip_tags($_POST['exp_date']));
       $descriptions = htmlspecialchars(strip_tags($_POST['descriptions']));
       $photo = $_FILES['photo']['name'];
 
@@ -32,23 +32,26 @@ include('../database/db.php');
       }else{
         if (move_uploaded_file($_FILES['photo']['tmp_name'], "../assets/images/products/".$new_target)) {
           try{
-            $sql = "INSERT INTO products (name,cat_id,price, stock, man_date, exp_date, descriptions, photo) 
-            VALUES (:name,:cat_id,:price,:stock, :man_date, :exp_date, :descriptions, :photo)";
+            $sql = "INSERT INTO products (name,cat_id , descriptions, photo) 
+            VALUES (:name,:cat_id, :descriptions, :photo)";
             $stmt = $db->prepare($sql);
             $stmt->bindParam(':name', $name);
             $stmt->bindParam(':cat_id', $cat_id);
-            $stmt->bindParam(':price', $price);
-            $stmt->bindParam(':man_date', $man_date);
-            $stmt->bindParam(':stock', $stock);
-            $stmt->bindParam(':exp_date', $exp_date);
+            // $stmt->bindParam(':price', $price);
+            // $stmt->bindParam(':man_date', $man_date);
+            // $stmt->bindParam(':stock', $stock);
+            // $stmt->bindParam(':exp_date', $exp_date);
             $stmt->bindParam(':descriptions', $descriptions);
             $stmt->bindParam(':photo', $new_target);
         
             $stmt->execute();
     
             if($stmt->rowCount() > 0){
-              $result = "<small>Product added</small>";
-              $alert = "alert-success";
+              $last_product_id = $db->lastInsertId();
+              $_SESSION['last_product_id'] = $last_product_id;
+              header('location: ./product_size.php');
+              // $result = "<small>Product added</small>";
+              // $alert = "alert-success";
             }else{
               $result = "<small>Something went wrong</small>";
               $alert = "alert-danger";
