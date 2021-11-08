@@ -58,8 +58,8 @@ if(isset($_POST['order_tx_ref'])){
         </div>
         <div class="row">
           <div class="col-md-6">
-            <span class="text-muted">Product Size: </span><span class="text-primary">'.$product_size.'</span>
-            <span class="text-muted">Quantity: </span><span class="text-primary">'.$items.'</span>
+            <span class="text-muted">Product Size: </span><span class="text-primary">'.$product_size.'</span><br>
+            <span class="text-muted">Quantity: </span><span class="text-primary">'.$items.' items</span>
           </div>
           <div class="col-md-6">
             <span class="text-muted">Product price: </span><span class="text-primary">'.$price.' Rwf</span>
@@ -69,9 +69,9 @@ if(isset($_POST['order_tx_ref'])){
       
     }
 
-    echo '<h2>Total: <span class="text-primary">Rwf '.$total_price.'</span></h2>';
-    // if($sales_status == 0){
-      echo '
+    echo '<h2>Total: <span class="text-primary">'.$total_price.' Rwf</span></h2>';
+    
+      echo '<hr>
           <div class="row">
             <div class="col-sm-6">
               <h2 class="success">Coop Address</h2>

@@ -9,9 +9,9 @@
 			<th>#</th>
 			<th>Farmer Names</th>
 			<th>Phone N<sup>o</sup> </th>
-			<th>Email(Agent)</th>
 			<th>Amount</th>
-			<th>Verify Payments</th>
+			<th>Order Date</th>
+			<th>View / Verify Payments</th>
 		</tr>
 	</thead>
 
@@ -22,20 +22,18 @@
 			<td><?= $i ?></td>
 			<td><?= $res['fullname'] ?></td>
 			<td><?= $res['phone'] ?></td>
-			<td><?= $res['email'] ?></td>
-			<td>Rwf <?= $res['amount'] ?></td>
+			<td><?= $res['amount'] ?> Rwf</td>
+			<td><?= $res['paid_on'] ?></td>
 			<td>
 				<a href="" class="order_details btn" data-toggle="modal" data-target="#order_details" data-id="<?= $res['tx_ref'] ?>">
 				<span class="fa fa-eye"></span>
 				</a>
 				<?php if($res['verified'] == 0): ?>
 					<a href="./orders.php?tx_ref=<?= $res['tx_ref'] ?>&&amount=<?= $res['amount'] ?>" class="btn">
-						Verify 
+						Verify Payments
 					</a>
 				<?php else: ?>
-					<a href="#" class="btn">
-						<span class="fa fa-check"></span>Shipping
-					</a>
+						<span class="fa fa-check"></span>Verified
 				<?php endif ?>
 				
 			</td>

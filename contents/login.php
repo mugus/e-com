@@ -37,9 +37,9 @@
                           </div>
                           <div class="row">
                             <div class="text-center col-12 col-sm-12 col-md-12 col-lg-12">
-                                <input type="submit" class="btn mb-3 btn-small-wide" name="login" value="Sign In">
+                                <input type="submit" style="width: 100%!important;" class="btn mb-3 btn-small" name="login" value="Sign In">
                                 <p class="mb-4">
-                                  <a href="#" id="RecoverPassword">Forgot your password?</a> &nbsp; | &nbsp;
+                                  <a href="./forget_password.php" id="RecoverPassword">Forgot your password?</a> &nbsp; | &nbsp;
                                   <a href="./register" id="customer_register_link">Create account</a>
                                 </p>
                             </div>

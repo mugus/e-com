@@ -6,52 +6,6 @@ include('../database/db.php');
 
 
 
-    if(isset($_POST['add_new_farmer'])){
-      
-      $farmer_firstname = htmlspecialchars(strip_tags($_POST['farmer_firstname']));
-      $farmer_lastname = htmlspecialchars(strip_tags($_POST['farmer_lastname']));
-      $farmer_reg_no = htmlspecialchars(strip_tags($_POST['farmer_reg_no']));
-      $province = htmlspecialchars(strip_tags($_POST['province']));
-      $district = htmlspecialchars(strip_tags($_POST['district']));
-      $sector = htmlspecialchars(strip_tags($_POST['sector']));
-      $cell = htmlspecialchars(strip_tags($_POST['cell']));
-      $village = htmlspecialchars(strip_tags($_POST['village']));
-      $farmer_phone = htmlspecialchars(strip_tags($_POST['farmer_phone']));
-      $farmer_landsize = htmlspecialchars(strip_tags($_POST['farmer_landsize']));
-      $farmer_product_season_A = htmlspecialchars(strip_tags($_POST['farmer_product_season_A']));
-      $farmer_product_season_B = htmlspecialchars(strip_tags($_POST['farmer_product_season_B']));
-      $farmer_product_season_C = htmlspecialchars(strip_tags($_POST['farmer_product_season_C']));
-
-      $sql = "INSERT INTO farmers (farmer_firstname,farmer_lastname,farmer_reg_no, province, district, sector, cell, village, farmer_phone,farmer_landsize,farmer_product_season_A,farmer_product_season_B, farmer_product_season_C) 
-              VALUES
-              (:farmer_firstname,:farmer_lastname,:farmer_reg_no,:province, :district, :sector, :village, :cell, :farmer_phone,:farmer_landsize,:farmer_product_season_A,:farmer_product_season_B, :farmer_product_season_C)";
-      $stmt = $db->prepare($sql);
-
-      $stmt->execute(
-        array(
-          'farmer_firstname'=> $farmer_firstname,
-          'farmer_lastname'=> $farmer_lastname,
-          'farmer_reg_no'=> $farmer_reg_no,
-          'district'=> $district,
-          'province'=> $province,
-          'sector'=> $sector,
-          'cell'=> $cell,
-          'village'=> $village,
-          'farmer_phone'=> $farmer_phone,
-          'farmer_landsize'=> $farmer_landsize,
-          'farmer_product_season_A'=> $farmer_product_season_A,
-          'farmer_product_season_B'=> $farmer_product_season_B,
-          'farmer_product_season_C'=> $farmer_product_season_C
-        )
-      );
-      if($stmt->rowCount() > 0){
-        $result = "<small>Farmer added</small>";
-        $alert = "alert-success";
-      }else{
-        $result = "<small>Something went wrong</small>";
-        $alert = "alert-danger";
-      }
-    }
 
 
   include('./layouts/header.php');
@@ -62,7 +16,7 @@ include('../database/db.php');
     	<!--Page Title-->
     	<div class="page section-header text-center">
         <div class="page-title">
-          <div class="wrapper"><h1 class="page-width">Agent Dashboard</h1></div>
+          <div class="wrapper"><h1 class="page-width">Dashboard</h1></div>
         </div>
       </div>
       <style>
@@ -92,8 +46,32 @@ include('../database/db.php');
 
           </div>
           <div class="col-md-8 col-lg-9 col-sm-12">
-          
-          <?php include("./contents/new_farmer.php") ?>
+          <?php if(isset($result)){
+            echo "<div class='alert $alert alert-dismissable alert-sm' role='alert'>
+                    <div class='alert-message'>
+                    $result!
+                    </div>
+                  </div>";
+                }
+          ?>
+             <!-- tabs -->
+             <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"><b>Manage Farmers</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"><b>Add New Farmer</b></a>
+            </li>
+          </ul><!-- Tab panes -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+              <?php include("./contents/farmer_list.php") ?>
+            </div>
+            <div class="tab-pane" id="tabs-2" role="tabpanel">
+              <?php include("./contents/new_farmer.php") ?>
+            </div>
+          </div>
+          <!-- endtabs -->
 
           </div>
         </div>

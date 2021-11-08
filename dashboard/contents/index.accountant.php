@@ -8,7 +8,7 @@ $pay_st->execute();
 	<h2>Paid and Shipped Orders</h2>
 </div>
 <div class="float-right">
-	<a href="./exports/exportData.php" ><i class="fa fa-download"></i> Export to CSV</a>
+	<a href="./exports/exportData.php" ><i class="fa fa-download"></i> Export as CSV</a>
 </div>
 
 <table id="farmer_table" class="display" cellspacing="0" width="99%">
@@ -16,9 +16,10 @@ $pay_st->execute();
 		<tr>
 			<th>#</th>
 			<th>Farmer Names</th>
-			<th>Phone N<sup>o</sup> </th>
+			<th>Phone N<sup>o</sup></th>
 			<th>Email(Agent)</th>
 			<th>Amount</th>
+			<th>Paid On</th>
 			<th>View</th>
 		</tr>
 	</thead>
@@ -32,6 +33,7 @@ $pay_st->execute();
 			<td><?= $res['phone'] ?></td>
 			<td><?= $res['email'] ?></td>
 			<td>Rwf <?= $res['amount'] ?></td>
+			<td><?= $res['paid_on'] ?></td>
 			<td>
 				<a href="" class="order_details btn" data-toggle="modal" data-target="#order_details" data-id="<?= $res['tx_ref'] ?>">
                     <span class="fa fa-eye"></span>

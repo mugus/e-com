@@ -1,4 +1,9 @@
+Options -MultiViews
 RewriteEngine on
+
+RewriteCond %{HTTP_HOST} ^ingabo\.store [NC]
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.ingabo.store/$1 [R,L]
 
 RewriteRule ^login$ login.php
 RewriteRule ^register$ register.php
@@ -23,3 +28,10 @@ RewriteRule ^shop$ shop.php
 php_value display_errors 1
 # DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:16580744:
 php_flag output_buffering on
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php72” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php72 .php .php7 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

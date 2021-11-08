@@ -13,26 +13,20 @@ include('../database/db.php');
       $product_size = $_POST['product_size1'];
       $product_id = $_SESSION['last_product_id'];
       $price = $_POST['price1'];
-      $stock = $_POST['stock1'];
+      // $stock = $_POST['stock1'];
       $man_date = $_POST['man_date1'];
       $exp_date = $_POST['exp_date1'];
-         foreach ($price as $index => $prices) {
-          $ar_price = $prices;
-          // $ar_product_id = $product_id[$index];
-          $ar_product_size = $product_size[$index];
-          $ar_stock = $stock[$index];
-          $ar_man_date = $man_date[$index];
-          $ar_exp_date = $exp_date[$index];
-
-          try{
-            $sql = "INSERT INTO products_size (product_size,product_id, price, stock, man_date, exp_date) VALUES (:product_size,:product_id ,:price, :stock, :man_date, :exp_date)";
+        try{
+            $sql = "INSERT INTO products_size (product_size,product_id, price, man_date, exp_date) 
+                    VALUES (:product_size,:product_id ,:price, :man_date, :exp_date)";
+            // $sql = "INSERT INTO products_size (product_size,product_id, price, stock, man_date, exp_date) VALUES (:product_size,:product_id ,:price, :stock, :man_date, :exp_date)";
             $stmt = $db->prepare($sql);
-            $stmt->bindParam(':product_size', $ar_product_size);
+            $stmt->bindParam(':product_size', $product_size);
             $stmt->bindParam(':product_id', $product_id);
-            $stmt->bindParam(':price', $ar_price);
-            $stmt->bindParam(':stock', $ar_stock);
-            $stmt->bindParam(':man_date', $ar_man_date);
-            $stmt->bindParam(':exp_date', $ar_exp_date);
+            $stmt->bindParam(':price', $price);
+            // $stmt->bindParam(':stock', $stock);
+            $stmt->bindParam(':man_date', $man_date);
+            $stmt->bindParam(':exp_date', $exp_date);
     
             $stmt->execute();
   
@@ -47,8 +41,38 @@ include('../database/db.php');
             $result = "<p>Error occured: ".$ex->getMessage()."</p>";
             $alert = "alert-danger";
           }
+        //  foreach ($price as $index => $prices) {
+        //   $ar_price = $prices;
+        //   $ar_product_size = $product_size[$index];
+        //   $ar_stock = $stock[$index];
+        //   $ar_man_date = $man_date[$index];
+        //   $ar_exp_date = $exp_date[$index];
 
-        }
+        //   try{
+        //     $sql = "INSERT INTO products_size (product_size,product_id, price, stock, man_date, exp_date) VALUES (:product_size,:product_id ,:price, :stock, :man_date, :exp_date)";
+        //     $stmt = $db->prepare($sql);
+        //     $stmt->bindParam(':product_size', $ar_product_size);
+        //     $stmt->bindParam(':product_id', $product_id);
+        //     $stmt->bindParam(':price', $ar_price);
+        //     $stmt->bindParam(':stock', $ar_stock);
+        //     $stmt->bindParam(':man_date', $ar_man_date);
+        //     $stmt->bindParam(':exp_date', $ar_exp_date);
+    
+        //     $stmt->execute();
+  
+        //     if($stmt->rowCount() > 0){
+        //         $result = "<small>You are successful created product sizes</small>";
+        //         $alert = "alert-success";
+        //     }else{
+        //         $result = "<small>Something went wrong</small>";
+        //         $alert = "alert-danger";
+        //     }
+        //   }catch(PDOException $ex){
+        //     $result = "<p>Error occured: ".$ex->getMessage()."</p>";
+        //     $alert = "alert-danger";
+        //   }
+
+        // }
 
     }
 
@@ -62,7 +86,7 @@ include('../database/db.php');
     	<!--Page Title-->
     	<div class="page section-header text-center">
         <div class="page-title">
-          <div class="wrapper"><h1 class="page-width">Agent Dashboard</h1></div>
+          <div class="wrapper"><h1 class="page-width">Dashboard</h1></div>
         </div>
       </div>
       <style>

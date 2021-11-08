@@ -2,11 +2,13 @@
 session_start();
 
 include('./database/db.php');
-if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
+if(isset($_SESSION['un_id'])){
+  ?>
+  <?php if(isset($_SESSION['cooperative'])): ?>
 
 
-
-
+  
+<?php
 include('./layouts/header.php'); 
 include('./layouts/navbar.php');
 ?>
@@ -28,7 +30,7 @@ include('./layouts/navbar.php');
   <div class="container">
 
     <form method="POST" action="">
-    <div class="row billing-fields">
+      <div class="row billing-fields">
 
         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 sm-margin-30px-bottom">
           <div class="create-ac-content bg-light-gray padding-20px-all">
@@ -87,8 +89,8 @@ include('./layouts/navbar.php');
                   <input name="telephone" value="<?= $user['phone_number'] ?>" id="telephone" type="hidden">
                   <input name="email" value="<?= $user['email'] ?>" id="email" type="hidden">
             </fieldset>
-<hr>
-            <fieldset>
+            <hr>
+            <!-- <fieldset>
               <div class="row">
                 <div class="form-group col-md-12 col-lg-12 col-xl-12 required">
                   <label for="pay_phone">Confirm Phone N<sup>o</sup> for Payment <span class="text-danger">*</span></label>
@@ -99,7 +101,7 @@ include('./layouts/navbar.php');
 
             <div class="order-button-payment">
               <button class="btn" value="Place order" name="place_order" type="submit">Place order</button>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -174,10 +176,23 @@ include('./layouts/navbar.php');
                             number with <strong>078*********</strong> .</p>
                         </div>
                       </div>
-
                     </div>
 
                   </div>
+<hr>
+                  <fieldset>
+                    <div class="row">
+                      <div class="form-group col-md-12 col-lg-12 col-xl-12 required">
+                        <label for="pay_phone">Confirm Phone N<sup>o</sup> for Payment <span class="text-danger">*</span></label>
+                        <input name="pay_phone" placeholder="Eg: 0787848876" id="pay_phone" type="number" required>
+                      </div>
+                    </div>
+                  </fieldset>
+
+                  <div class="order-button-payment">
+                    <button class="btn" value="Place order" name="place_order" type="submit">Place order</button>
+                  </div>
+
                 </div>
 
 
@@ -193,9 +208,11 @@ include('./layouts/navbar.php');
 
 </div>
 <!--End Body Content-->
-
+<?php else: ?>
+    <?php header("location: ./dashboard/select_shop.php"); ?>
+  <?php endif ?>
 <?php 
-include('./layouts/footer.php');
+  include('./layouts/footer.php');
 }else{
   header("location: ../login");
 }

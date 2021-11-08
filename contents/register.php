@@ -32,14 +32,14 @@
                     <div class="form-group">
                       <label for="firstname">Firstname</label>
                       <input type="text" name="firstname" placeholder="Eg: John" id="firstname" class=""
-                        autocorrect="off" autocapitalize="off" autofocus="">
+                        autocorrect="off" autocapitalize="off" autofocus="" required>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-group">
                       <label for="lastname">Surname</label>
                       <input type="text" name="lastname" placeholder="Eg: Muhizi" id="lastname" class=""
-                        autocorrect="off" autocapitalize="off" autofocus="">
+                        autocorrect="off" autocapitalize="off" autofocus="" required>
                     </div> 
                   </div>
                 </div>
@@ -49,7 +49,7 @@
               <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
                   <label for="email">Email</label>
-                  <input type="email" name="email" placeholder="Eg: johndoe@gmail.com" id="email" class="" autocorrect="off" autocapitalize="off" autofocus="">
+                  <input type="email" name="email" placeholder="Eg: johndoe@gmail.com" id="email" class="" autocorrect="off" autocapitalize="off" autofocus="" required>
                 </div>
               </div>
 
@@ -59,14 +59,14 @@
                     <div class="form-group">
                       <label for="address">Address</label>
                       <input type="text" name="address" placeholder="Eg: Kicukiro-Kigali" id="address" class=""
-                        autocorrect="off" autocapitalize="off" autofocus="">
+                        autocorrect="off" autocapitalize="off" autofocus="" required>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-group">
                       <label for="phone_number">Phone Number</label>
                       <input type="text" name="phone_number" placeholder="Eg: 0787848876" id="phone_number" class=""
-                        autocorrect="off" autocapitalize="off" autofocus="">
+                        autocorrect="off" autocapitalize="off" autofocus="" required>
                     </div> 
                   </div>
                 </div>
@@ -76,9 +76,18 @@
               <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="password" value="" name="password" placeholder="*********" id="password"
-                    class="">
+                  <input type="password" value="" name="password" placeholder="*********" id="password" class="" required>
                 </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <input type="checkbox" name="terms" id="terms" required>
+                  <label for="checkbox"> I agree to these <a target="_blank" href="./Termsandconditions.html">Terms and Conditions</a>.</label>
+                   <!-- I Agree Terms & Coditions -->
+                </div>
+
               </div>
             </div>
             <div class="row">

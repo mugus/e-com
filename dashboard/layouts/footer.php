@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="order_details" tabindex="-1" role="dialog" aria-labelledby="order_details" aria-hidden="true">
-  <div class="modal-dialog  modal-md" role="document">
+  <div class="modal-dialog  modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">Order Details</h2>
@@ -20,6 +20,8 @@
     </div>
   </div>
 </div>
+
+
 
 
 
@@ -58,6 +60,13 @@
         $(document).ready(function () {
           $('#farmer_table').DataTable();
         });
+        $(document).ready(function () {
+          $('#stock_table').DataTable();
+        });
+
+        // $(document).ready(function () {
+        //   $('#product_table').DataTable();
+        // });
       </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
 

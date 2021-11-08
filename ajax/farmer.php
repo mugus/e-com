@@ -2,6 +2,39 @@
   session_start();
   include('../database/db.php');
 
+
+  if(isset($_POST['farmer_ids'])){
+    $farmer_ids = $_POST['farmer_ids'];
+    $sql = "SELECT * FROM farmers WHERE farmer_id=:farmer_id";
+    $stmt = $db->prepare($sql);
+    $stmt->execute(
+      array(
+        ':farmer_id'=>$farmer_ids
+        )
+      );
+      if($stmt->rowCount() == 1){
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        echo json_encode($row);
+      }else{
+        echo "Error: No id found";
+      }
+
+  }
+
+  if(isset($_POST['farmId'])){
+    $sql = "SELECT MAX(f.farmer_id) AS far_id FROM farmers f";
+    $stmt = $db->prepare($sql);
+    $stmt->execute();
+    if($stmt->rowCount() == 1){
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $id = (int)$row['far_id'] + 1;
+      echo $_POST['farmId'].'0'.$id;
+    }
+    // echo "Ready ".$_POST['farmId'];
+  }
+
+
+
   if(isset($_POST['farmer_reg_no'])){
     $farmer_reg_no = $_POST['farmer_reg_no'];
   

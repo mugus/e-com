@@ -2,11 +2,14 @@
   session_start();
 
 include('./database/db.php');
-if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
+if(isset($_SESSION['un_id'])){
+  ?>
+  <?php if(isset($_SESSION['cooperative'])): ?>
 
 
 
 
+<?php
 include('./layouts/header.php'); 
 include('./layouts/navbar.php');
 ?>
@@ -28,6 +31,15 @@ include('./layouts/navbar.php');
   <div class="container">
     <div class="row">
       <div class="col-12 col-sm-12 col-md-8 col-lg-8 main-col">
+        <?php
+          if(isset($result)){
+            echo "<div class='alert $alert alert-dismissable alert-sm' role='alert'>
+                    <div class='alert-message'>
+                    $result!
+                    </div>
+                  </div>";
+                }
+        ?>
         <form action="#" method="post" class="cart style2">
           <table>
             <thead class="cart__row cart__header">
@@ -109,11 +121,11 @@ include('./layouts/navbar.php');
                 class="money">Rwf <?= $c_sum['cart_sum'] ?></span></span>
           </div>
           <div class="cart__shipping">Shipping &amp; taxes calculated at checkout</div>
-          <p class="cart_tearm">
+          <!-- <p class="cart_tearm">
             <label>
-              <input type="checkbox" name="tearm" id="cartTearm" class="checkbox" value="tearm" required="">
+              <input type="checkbox" name="tearm" id="cartTearm" class="checkbox" value="tearm" required>
               I agree with the terms and conditions</label>
-          </p>
+          </p> -->
           <a href="./checkout" id="cartCheckout" class="btn btn--small-wide checkout">Checkout</a>
         </div>
 
@@ -124,20 +136,12 @@ include('./layouts/navbar.php');
 </div>
 <!--End Body Content-->
 
-
-
-
-
-
-
-
-
-
-
-
+<?php else: ?>
+    <?php header("location: ./dashboard/select_shop.php"); ?>
+  <?php endif ?>
 <?php 
-include('./layouts/footer.php');
-  }else{
-    header("location: ../login");
-  }
+  include('./layouts/footer.php');
+}else{
+  header("location: ../login");
+}
 ?>

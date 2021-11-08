@@ -11,31 +11,43 @@ if(isset($_POST['login'])){
 	if($stmt->rowCount() > 0){
 		$row=$stmt->fetch(PDO::FETCH_ASSOC);
 		// Check if password match
-		if(password_verify($password, $row['password'])){
-      $user_role = $row['user_role'];
-      $un_id = $row['un_id'];
+    $status_code = $row['status_code'];
+
+		if($status_code == 1){
+      if(password_verify($password, $row['password'])){
+        $user_role = $row['user_role'];
+        $un_id = $row['un_id'];
      
-			if($user_role == 1){
-        $_SESSION['un_id']=$un_id;
-        $_SESSION['user_role'] = $user_role;
-				header("location: ./dashboard");
-			}else if($user_role == 2){
-        $_SESSION['un_id']=$un_id;
-        $_SESSION['user_role'] = $user_role;
-				header("location: ./dashboard/accountant.index.php");
-      }else if($user_role == 3){
-        $_SESSION['un_id']=$un_id;
-        $_SESSION['user_role'] = $user_role;
-				header("location: ./dashboard/warehouse.index.php");
+        if($user_role == 1){
+          $_SESSION['un_id']=$un_id;
+          $_SESSION['user_role'] = $user_role;
+          header("location: ./dashboard");
+        }else if($user_role == 2){
+          $_SESSION['un_id']=$un_id;
+          $_SESSION['user_role'] = $user_role;
+          header("location: ./dashboard/accountant.index.php");
+        }else if($user_role == 3){
+          $_SESSION['un_id']=$un_id;
+          $_SESSION['user_role'] = $user_role;
+          header("location: ./dashboard/warehouse.index.php");
+        }else if($user_role == 4){
+          $_SESSION['un_id']=$un_id;
+          $_SESSION['user_role'] = $user_role;
+          header("location: ./dashboard/admin.index.php");
+        }else{
+          // header("location: ./shop");
+          $result = "<small>Your account is not allowed to shop. <br>Contact Ingabo PlantHealth Administration</small>";
+          $alert = "alert-danger";
+        }
       }else{
-				// header("location: ./shop");
-        $result = "<small>Your account is not allowed to shop. <br>Contact Ingabo PlantHealth Administration</small>";
+        $result = "<small>Password not match</small>";
         $alert = "alert-danger";
-			}
-		}else{
-			$result = "<small>Password not match</small>";
-			$alert = "alert-danger";
-		}
+      }
+
+    }else{
+      $result = "<small>Account Not Verified</small>";
+      $alert = "alert-danger";
+    }
 
 		
 	}else{

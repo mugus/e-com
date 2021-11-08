@@ -11,7 +11,10 @@ if(isset($_POST['add_user'])){
     $pass = htmlspecialchars(strip_tags($_POST['password']));
     $password = password_hash($pass, PASSWORD_DEFAULT);
     $ver_code = uniqid().''.rand(100,316768).''.uniqid().''.uniqid().''.rand(100,316768).''.uniqid();
-  
+
+    $EmailLength = strlen($email);
+    $maxChar = 14;
+    $resi = substr_replace($email, ' ........ ', $maxChar/7, $EmailLength-$maxChar);
     try{
       $sql = "INSERT INTO users (firstname,lastname,email, address, phone_number, password, un_id) 
       VALUES (:firstname,:lastname,:email,:address, :phone_number, :password, :un_id)";
@@ -29,11 +32,11 @@ if(isset($_POST['add_user'])){
         
       if($stmt->rowCount()==1){
           // Send Verification email
-        $verify ='ver'.$ver_code.'fy'.$email;
+        $verify = $email;
         $to=$email;
         $time = time();
         $subject="Confirm your account";
-        $from = 'Ingabo PlantHealth';
+        $from = 'mail@ingabo.store';
         $headers = "MIME-Version: 1.0\r\n";
         $headers = "Content-Type: text/html; charset=UTF-8\r\n";
         $headers .= 'From: '.$from."\r\n".'Reply-To: '.$from."\r\n".'X-Mailer: PHP/' . phpversion();
@@ -44,7 +47,7 @@ if(isset($_POST['add_user'])){
                       Thank you for registering to <b>ingabo webshop</b>!<br>
                       To make your account active please verify your account.<br>
                     </p>';
-        $message .= '<a class="btn btn-primary btn-sm" href="'.$_SERVER['HTTP_HOST'].'/ingabo/verify.php?id='.$verify.'&code='.$ver_code.'">Click here to Confirm</a>';
+        $message .= '<a class="btn btn-primary btn-sm" href="'.$_SERVER['HTTP_HOST'].'/verify.php?code='.$ver_code.'">Click here to Confirm</a>';
 
         $message .= '<br><br><br><br><br><br><br><small>Ingabo PlantHealth Administrations</small>';
         $message .= '</body></html>';
@@ -52,7 +55,7 @@ if(isset($_POST['add_user'])){
   
         // header("location: ./verify.php");
           $alert = "alert-success";
-          $result = "<small>Account created successfully! Confirm your email</small>";
+          $result = "<small>Account created successfully! Confirm your <b>$resi</b> email address</small>";
       }else{
         $alert = "alert-danger";
         $result = "<small>Something went wrong</small>";

@@ -40,7 +40,7 @@ $orders->execute(
 // Get payments before
 // $pay_sql = "SELECT * ,(SELECT COUNT(*) FROM orders o WHERE o.tx_ref = '615f0339beef3d1453740wio615f0339bef06nj615f0339bef0beu263115kkiz615f0339bef0e') AS items
 //             FROM payments pa WHERE pa.tx_ref = '615f0339beef3d1453740wio615f0339bef06nj615f0339bef0beu263115kkiz615f0339bef0e'";
-$pay_sql = "SELECT * FROM `payments` ORDER BY `payments`.`paid_on` DESC";
+$pay_sql = "SELECT * FROM `payments` ORDER BY `payments`.`verified` ASC";
 $pay_stmt = $db->prepare($pay_sql);
 $pay_stmt->execute();
 
@@ -153,6 +153,12 @@ $stmt_category->execute();
       <span class="success">Loading...</span>
         <!-- <img src="../assets/images/loader.gif" alt="Loading..." /> -->
     </div>
+    <style>
+      input[type = 'date'], input[type = 'text'], input[type = 'file'], input[type = 'password'], input[type = 'number']{
+        font-size: 12px!important; 
+        height: 30px;
+      }
+    </style>
     <div class="pageWrapper">
       <!--Search Form Drawer-->
       <div class="search">

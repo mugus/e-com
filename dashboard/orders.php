@@ -13,7 +13,7 @@
     	<!--Page Title-->
     	<div class="page section-header text-center">
         <div class="page-title">
-          <div class="wrapper"><h1 class="page-width">Agent Dashboard</h1></div>
+          <div class="wrapper"><h1 class="page-width">Dashboard</h1></div>
         </div>
       </div>
       <style>

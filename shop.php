@@ -1,11 +1,14 @@
 <?php
   session_start();
-  if(isset($_SESSION['un_id']) AND $_SESSION['user_role'] == 1){
+  if(isset($_SESSION['un_id'])){
+    ?>
+    <?php if(isset($_SESSION['cooperative'])): ?>
+<?php
 include('./database/db.php');
 
 
 
-
+$cooperative =  $_SESSION['cooperative'];
 
 // Add to cart
 if(isset($_POST['add_cart'])){
@@ -14,34 +17,64 @@ if(isset($_POST['add_cart'])){
   $qty = htmlspecialchars(strip_tags($_POST['qty']));
   $ps_id = htmlspecialchars(strip_tags($_POST['ps_id']));
 
-  $sql = "SELECT * FROM cart WHERE user_id = :user_id AND product_id = :product_id AND ps_id = :ps_id";
+  $sql = "SELECT * FROM cart WHERE user_id = :user_id AND product_id = :product_id AND ps_id = :ps_id AND coop_id = :coop_id";
   $stmt = $db->prepare($sql);
   $stmt->execute(
     array(
       'user_id' => $user_id,
       'product_id' => $product_id,
-      'ps_id' => $ps_id
+      'ps_id' => $ps_id,
+      'coop_id' => $_SESSION['cooperative']
     )
   );
   if($stmt->rowCount() > 0){
     $result = "<small>Item already on cart</small>";
     $alert = "alert-danger";
   }else{
-    $sql = "INSERT INTO cart (product_id, user_id, qty, ps_id) VALUES (:product_id, :user_id, :qty, :ps_id)";
+    $sqlp = "SELECT ps.id, st.id AS st_id, st.coop_id, st.stock, p.name AS product_name, ps.product_size, ps.price FROM stock_mgt st 
+            LEFT JOIN products_size ps ON st.ps_id = ps.id
+            LEFT JOIN products p ON ps.product_id = p.product_id
+            WHERE st.coop_id = :coop_id";
+    $stmt_o = $db->prepare($sqlp);
+    $stmt_o->execute(
+      array(
+        'coop_id' => $_SESSION['cooperative']
+      )
+    );
+    if($stmt_o->rowCount() > 0){
+        $sto = $stmt_o->fetch(PDO::FETCH_ASSOC);
+        if($sto['stock'] >= $qty){
+            $sql = "INSERT INTO cart (product_id, user_id, qty, ps_id, coop_id) 
+                    VALUES (:product_id, :user_id, :qty, :ps_id, :coop_id)";
 
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':product_id', $product_id);
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->bindParam(':qty', $qty);
-    $stmt->bindParam(':ps_id', $ps_id);
-    $stmt->execute();
-    if($stmt->rowCount() > 0){
-      $result = "<small>Item added on your cart</small>";
-			$alert = "alert-success";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':product_id', $product_id);
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':qty', $qty);
+            $stmt->bindParam(':ps_id', $ps_id);
+            $stmt->bindParam(':coop_id', $_SESSION['cooperative']);
+            $stmt->execute();
+            if($stmt->rowCount() > 0){
+                $result = "<small>Item added on your cart</small>";
+                $alert = "alert-success";
+            }else{
+                $result = "<small>Not added, Something went wrong</small>";
+                $alert = "alert-danger";
+            }
+        }else{
+            $result = "<small>Qty selected can not exceed stock available<br>Stock available of 
+                        <b>".$sto['product_name']."(".$sto['product_size'].")</b> is <b>".$sto['stock']."</b></small>";
+            $alert = "alert-danger";
+        }
+
     }else{
-      $result = "<small>Not added</small>";
-			$alert = "alert-danger";
+    $result = "<small>Out of Stock</small>";
+    $alert = "alert-danger";
     }
+
+
+
+
   }
 
 
@@ -73,14 +106,14 @@ include('./layouts/header.php'); ?>
                                     </a>
                                     <ul class="sublinks">
                                         <?php
-                      $id = $row['cat_id'];
-                      $sq = "SELECT p.name,cat.cat_name
-                            FROM products p
-                            LEFT JOIN categories cat ON cat.cat_id = p.cat_id
-                            WHERE cat.cat_id = :cat_id";
-                      $stemt = $db->prepare($sq);
-                      $stemt->execute(array('cat_id'=>$id));
-                    ?>
+                                        $id = $row['cat_id'];
+                                        $sq = "SELECT p.name,cat.cat_name
+                                                FROM products p
+                                                LEFT JOIN categories cat ON cat.cat_id = p.cat_id
+                                                WHERE cat.cat_id = :cat_id";
+                                        $stemt = $db->prepare($sq);
+                                        $stemt->execute(array('cat_id'=>$id));
+                                        ?>
 
                                         <?php foreach($stemt as $res): ?>
                                         <li class="level2"><a href="#;" class="site-nav">
@@ -146,17 +179,24 @@ include('./layouts/header.php'); ?>
                                     </div>
                                   </div>";
                                 }
-                          ?>
+                        ?>
                         <div class="row">
 
 
                             <?php if($stmt_pro->rowCount() > 0): ?>
                             <?php 
                               while($row = $stmt_pro->fetch(PDO::FETCH_ASSOC)):
-                                $si = "SELECT * FROM products_size c WHERE c.product_id = :product_id";
+                                $si = "SELECT ps.id, st.id AS st_id, coop.coop_id, ps.product_size, ps.price,
+                                        ps.man_date, ps.exp_date, st.stock, coop.coop_name FROM products_size ps
+                                    LEFT JOIN stock_mgt st ON ps.id = st.ps_id
+                                    LEFT JOIN cooperatives coop ON st.coop_id = coop.coop_id
+                                    WHERE ps.product_id = :product_id AND coop.coop_id = :coop_id";
                                 $sizes = $db->prepare($si);
                                 $sizes->execute(
-                                  array('product_id' => $row['product_id'])
+                                  array(
+                                      'product_id' => $row['product_id'],
+                                      'coop_id' => $_SESSION['cooperative']
+                                      )
                                 );
                               ?>
                             <div class="col-md-4">
@@ -164,30 +204,34 @@ include('./layouts/header.php'); ?>
                                 <input type="hidden" name="un_id" value="<?= $_SESSION['un_id'] ?>">
                                 <input type="hidden" name="product_id" value="<?= $row['product_id'] ?>">
                                 <img src="./assets/images/products/<?= $row['photo'] ?>" alt="" width="100%"
-                                    height="190">
+                                    height="300px">
                                 <div class="product-details text-left">
                                     <hr>
                                     <label for="examplePassword" class=""><span class="text-danger">*</span>Fill
                                         Quantity => Select Product size</label>
 
-                                    <div class="position-relative input-group form-group" style="width: 80%!important;">
+                                    <div class="position-relative input-group form-group" style="width: 100%!important;">
                                         <div class="input-group-prepend">
                                             <div class="">
                                                 <input class="form-control" type="number" name="qty" id="qty" value="1"
                                                     pattern="[0-9]*"
                                                     style="height:30px!important;width:70px;font-size:15px;" min="1"
-                                                    title="Fill out number of Items">
+                                                    title="Select Product size First! Fill out number of Items after">
                                             </div>
                                         </div>
                                         <select onchange="load_price()" name="ps_id" class="form-control" id="size"
                                             style="height:30px!important; padding-top:2px;font-size:15px;"
                                             title="Make size by your choice" required>
                                             <option value="">Select Size</option>
+                                            <?php if($sizes->rowCount() > 0): ?>
                                             <?php  while($response = $sizes->fetch(PDO::FETCH_ASSOC)): ?>
                                             <option value="<?= $response['id'] ?>">
                                                 <?= $response['product_size'].' : '.$response['price'].' Rwf' ?>
                                             </option>
                                             <?php endwhile ?>
+                                            <?php else: ?>
+                                                <option disabled>No stock Available</option>
+                                            <?php endif ?>
                                         </select>
                                     </div>
 
@@ -200,12 +244,11 @@ include('./layouts/header.php'); ?>
                                     </div>
                                     <!-- End product name -->
                                     <!-- product price -->
-                                    <div class="product-price">
-                                        <b>Price :(<span class="price">Refer to size choosen</span>) </b>
-                                    </div><br>
+                                    <!-- <div class="product-price">
+                                        <b>i.e :<span class="price">Qty selected can not exceed stock available</span> </b>
+                                    </div><br> -->
                                     <!-- End product price -->
-                                    <button class="btn btn-addto-cart" name="add_cart" type="submit">Add To
-                                        Cart</button>
+                                    <button class="btn btn-addto-cart" name="add_cart" type="submit">Add To Cart</button>
                                     <hr>
                                 </div>
                               </form>
@@ -237,9 +280,12 @@ include('./layouts/header.php'); ?>
 </div>
 <!--End Body Content-->
 
+<?php else: ?>
+    <?php header("location: ./dashboard/select_shop.php"); ?>
+  <?php endif ?>
 <?php 
-include('./layouts/footer.php');
-  }else{
-    header("location: ./login");
-  }
+  include('./layouts/footer.php');
+}else{
+  header("location: ../login");
+}
 ?>

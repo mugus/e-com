@@ -4,32 +4,68 @@ $(".alert").fadeTo(6000, 500).slideUp(2000, function (){
 });
 
 
+
+
+
+
+
+// Show delete item warning 
+function ShowWarning(ps_id){
+	$("#div"+ps_id).show();
+	$(".show_ps_id").hide();
+}
+function HideWarning(ps_id){
+	$("#div"+ps_id).hide();
+	$(".show_ps_id").show();
+
+}
+// End Show delete item warning 
+
+
+
+
 // get duplicated sizes input
-$('#btnAdd').click(function() {
-	let num = $('.clonedSection').length;
-	let newNum  = new Number(num + 1);
+// $('#btnAdd').click(function() {
+// 	let num = $('.clonedSection').length;
+// 	let newNum  = new Number(num + 1);
 	
-	let newSection = $('#clonedSection'+num).clone().attr('id', 'clonedSection'+newNum);
+// 	let newSection = $('#clonedSection'+num).clone().attr('id', 'clonedSection'+newNum);
 	
-	newSection.children(':first').children(':first').attr('id', 'product_size' + newNum).attr('name', 'product_size' + newNum).attr('value', '' + newNum);
-	newSection.children(':nth-child(2)').children(':first').attr('id', 'price' + newNum).attr('name', 'price' + newNum).attr('value', '' + newNum);
-	newSection.children(':nth-child(2)').children(':first').attr('id', 'stock' + newNum).attr('name', 'stock' + newNum).attr('value', '' + newNum);
+// 	newSection.children(':first').children(':first').attr('id', 'product_size' + newNum).attr('name', 'product_size' + newNum).attr('value', '' + newNum);
+// 	newSection.children(':nth-child(2)').children(':first').attr('id', 'price' + newNum).attr('name', 'price' + newNum).attr('value', '' + newNum);
+// 	newSection.children(':nth-child(2)').children(':first').attr('id', 'stock' + newNum).attr('name', 'stock' + newNum).attr('value', '' + newNum);
 
-	$('.clonedSection').last().append(newSection)
-	$('#btnDel').css('display','block');
+// 	$('.clonedSection').last().append(newSection)
+// 	$('#btnDel').css('display','block');
 	
-});
+// });
 
-$('#btnDel').click(function() {
-	let num = $('.clonedSection').length; // how many "duplicatable" input fields we currently have
-	$('#clonedSection'+num).remove();     // remove the last element
+// $('#btnDel').click(function() {
+// 	let num = $('.clonedSection').length; // how many "duplicatable" input fields we currently have
+// 	$('#clonedSection'+num).remove();     // remove the last element
 	
-	if (num-1 == 1)
-		$('#btnDel').css('display','none');
-});
-$('#btnDel').css('display','none');
+// 	if (num-1 == 1)
+// 		$('#btnDel').css('display','none');
+// });
+// $('#btnDel').css('display','none');
 
 		
+// Get phone div to update phone number
+function Getphone(){
+	if($('#getdiv').is(":checked"))   
+		$(".phone_div").show();
+	else
+		$(".phone_div").hide();
+}
+
+
+
+$('#password, #password2').on('keyup', function () {
+	if ($('#password').val() == $('#password2').val()) {
+		$('#phone').show();
+	} else 
+	  $('#phone').hide();
+  });
 
 // Add search box on select input
 $(document).ready(function () {
@@ -37,26 +73,205 @@ $(document).ready(function () {
 		sortField: 'text'
 	});
 });
-  // // Table data
-	// $(document).ready( function () {
-	// 	$('#farmer_table').DataTable();
-	// } );
 
-	//Auto Generate Reg No
-	function makeid(length) {
-		var result           = '';
-		var characters       = '0123456789';
-		var charactersLength = characters.length;
-		for ( var i = 0; i < length; i++ ) {
-			result += characters.charAt(Math.floor(Math.random() * charactersLength));
+//Auto Generate Reg No
+function makeid(length) {
+	var result           = '';
+	var characters       = '0123456789';
+	var charactersLength = characters.length;
+	for ( var i = 0; i < length; i++ ) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+		}
+	return result;
+}
+let id = makeid(8);
+$("#farmer_reg_no").val("INGABO-"+id);
+
+
+
+// Check availability of Product name
+$('.product_name').on('blur', function(){
+	let product_name = $(this).val().trim();
+	// console.log(product_name);
+	$.ajax({
+		url: "../ajax/product.php",
+		data: {
+			product_name:product_name
+		},
+		type: 'POST',
+		success: function(data){
+			$('#p_name_msg').html(data);
+		}
+	});
+});
+
+
+// Review Product size details
+$(document).on('click', '.product_size_details', function(e){
+	e.preventDefault();
+	var product_size_details = $(this).data('id');
+	// console.log('Id is ',product_size_details);
+	getProduct_size_Datails(product_size_details);
+  });
+
+  function getProduct_size_Datails(product_size_details){
+	$.ajax({
+		type: 'POST',
+		url: '../ajax/product.php',
+		data: {product_size_details:product_size_details},
+		// dataType: 'json',
+		success: function(response){
+			$('#sizes_data').html(response);
+		}
+	});
+  }
+
+
+    // Register FarmerID
+
+	$(document).on('blur', '#farmer_firstname', function(e){
+		e.preventDefault();
+		var farmer_firstname = $(this).val();
+		let farmId = farmer_firstname.substring(0, 4);
+		// console.log("farmer ", farmId);
+		Get_Farmer_Chars(farmId);
+	});
+	function Get_Farmer_Chars(farmId){
+		$.ajax({
+			type: 'POST',
+			url: '../ajax/farmer.php',
+			data: {farmId:farmId},
+			// dataType: 'json',
+			success: function(response){
+				$('#FarmerNewId').val(response);
+				// console.log(response);
 			}
-		return result;
+		});
 	}
-	let id = makeid(8);
-	// console.log(id);
-	$("#farmer_reg_no").val("INGABO-"+id);
+
+
+  // Update Farmer details
+  $(document).on('click', '.edit_farmer', function(e){
+	e.preventDefault();
+	var farmer_ids = $(this).data('id');
+	Edit_Farmer_Datails(farmer_ids);
+  });
+  function Edit_Farmer_Datails(farmer_ids){
+	console.log('Id is ',farmer_ids);
+
+	$.ajax({
+		type: 'POST',
+		url: '../ajax/farmer.php',
+		data: {farmer_ids:farmer_ids},
+		dataType: 'json',
+		success: function(response){
+			$('#farmer_id').val(response.farmer_id);
+			$('#farmer_firstname').val(response.farmer_firstname);
+			$('#farmer_lastname').val(response.farmer_lastname);
+			// $('#farmer_reg_no').val(response.farmer_reg_no);
+			$('#province').val(response.province);
+			$('#district').val(response.district);
+			$('#sector').val(response.sector);
+			$('#cell').val(response.cell);
+			$('#village').val(response.village);
+			$('#f_phone').val(response.farmer_phone);
+			$('#farmer_landsize').val(response.farmer_landsize);
+			// $('#id').val(response.id);
+			console.log('name ',response.farmer_lastname);
+		}
+	});
+  }
+
+
+  // New Product size details
+
+  $(document).on('click', '.new_ps', function(e){
+	e.preventDefault();
+	var new_ps = $(this).data('id');
+	// console.log('New Id is ',new_ps);
+	New_Product_size_Datails(new_ps);
+  });
+  function New_Product_size_Datails(new_ps){
+	$.ajax({
+		type: 'POST',
+		url: '../ajax/product.php',
+		data: {new_ps:new_ps},
+		dataType: 'json',
+		success: function(response){
+			$('#product_name').html(response.name);
+			$('#product_id').val(response.product_id);
+			// console.log('pro id ',response.product_id);
+		}
+	});
+  }
+  // End New Product size details
+
+
+
+// const load_price = () => {
+	// let id = $("#size").val();
+	// $("#qty").attr("disabled", false);
+// alert(id);
+// }
+// update Stock
+$(document).on('click', '.edit_stock', function(e){
+	e.preventDefault();
+	var edit_stock = $(this).data('id');
+	// console.log('New Id is ',edit_stock);
+	Update_Stock(edit_stock);
+  });
+function Update_Stock(edit_stock){
+	$.ajax({
+		type: 'POST',
+		url: '../ajax/product.php',
+		data: {edit_stock:edit_stock},
+		dataType: 'json',
+		success: function(response){
+			$('#stock').val(response.stock);
+			$('#st_id').val(response.id);
+			$('#coop_name').html(response.coop_name);
+			$('.product_size').html(response.product_size);
+			$('#pro_size_id').val(response.ps_id);
+			console.log('pro size ',response.ps_id);
+		}
+	});
+}
+
+
+// end update stock
+
+
+  // Update Product size details
+$(document).on('click', '.ps_id', function(e){
+	e.preventDefault();
+	var ps_id = $(this).data('id');
+	// console.log('Id is ',ps_id);
+	Edit_Product_size_Datails(ps_id);
+  });
+
+  function Edit_Product_size_Datails(ps_id){
+	$.ajax({
+		type: 'POST',
+		url: '../ajax/product.php',
+		data: {ps_id:ps_id},
+		dataType: 'json',
+		success: function(response){
+			$('#product_size').val(response.product_size);
+			$('#stock').val(response.stock);
+			$('#price').val(response.price);
+			$('#man_date').val(response.man_date);
+			$('#exp_date').val(response.exp_date);
+			$('#id').val(response.id);
+			console.log('size ',response.id);
+		}
+	});
+  }
+
+
+
+
 // Check availability of Reg No
-$(window).on('click', function (){
+$('#farmer_reg_no').on('blur', function (){
   let farmer_reg_no = $('#farmer_reg_no').val().trim();
 	// console.log("fafhvf ", farmer_reg_no);
   $.ajax({
@@ -72,7 +287,7 @@ $(window).on('click', function (){
 
 
 // checking phone availability
-$(window).on('click', function (){
+$('#farmer_phone').on('blur', function (){
   let farmer_phone = $('#farmer_phone').val().trim();
 	// console.log("fafhvf ", farmer_phone);
   $.ajax({
@@ -86,21 +301,7 @@ $(window).on('click', function (){
 	});
 });
 
-// Show shop prices
-// $('#size').change(load_new_content());
 
-// function load_price(){
-//   let selected_option_value = $("#size option:selected").val();
-//   $.post(
-//     "./ajax/product.php", 
-//     {option_value: selected_option_value},
-//     function (data){
-//       $('.price'+selected_option_value).html(data);
-//       // alert(data);
-// 			console.log(data);
-//     }
-//   );
-// }
 
 
 

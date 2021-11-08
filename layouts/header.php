@@ -54,11 +54,14 @@ FROM cart c
 LEFT JOIN products p ON c.product_id = p.product_id
 LEFT JOIN products_size ps ON c.ps_id = ps.id
 LEFT JOIN categories cat ON cat.cat_id = p.cat_id
-WHERE c.user_id = :user_id";
+WHERE c.user_id = :user_id AND c.coop_id = :coop_id";
 
 $stmt_cart = $db->prepare($sql_cart);
 $stmt_cart->execute(
-  array('user_id' => $_SESSION['un_id'])
+  array(
+    'user_id' => $_SESSION['un_id'],
+    'coop_id' => $_SESSION['cooperative']
+  )
 );
 
 
@@ -70,19 +73,25 @@ FROM cart c
 LEFT JOIN products p ON c.product_id = p.product_id
 LEFT JOIN products_size ps ON c.ps_id = ps.id
 LEFT JOIN categories cat ON cat.cat_id = p.cat_id
-WHERE c.user_id = :user_id";
+WHERE c.user_id = :user_id AND c.coop_id = :coop_id";
 
 $stmt_navcart = $db->prepare($sql_navcart);
 $stmt_navcart->execute(
-  array('user_id' => $_SESSION['un_id'])
+  array(
+    'user_id' => $_SESSION['un_id'],
+    'coop_id' => $_SESSION['cooperative']
+    )
 );
 
 $que = "SELECT SUM(c.qty*ps.price) AS cart_sum FROM cart c
           LEFT JOIN products_size ps ON c.ps_id = ps.id
-          WHERE c.user_id = :user_id";
+          WHERE c.user_id = :user_id AND c.coop_id = :coop_id";
 $stmt_sum = $db->prepare($que);
 $stmt_sum->execute(
-  array('user_id' => $_SESSION['un_id'])
+  array(
+    'user_id' => $_SESSION['un_id'],
+    'coop_id' => $_SESSION['cooperative']
+    )
 );
 $c_sum = $stmt_sum->fetch(PDO::FETCH_ASSOC);
 
@@ -164,7 +173,6 @@ if(isset($_POST['place_order'])){
     );
     if($stmt->rowCount() == 1){
       // fill orders table
-      // $user = $_SESSION['un_id'];
       $s = "SELECT user_id, product_id, qty, ps_id FROM cart WHERE user_id = :user_id";
       $car = $db->prepare($s);
       $car->execute(
@@ -178,26 +186,87 @@ if(isset($_POST['place_order'])){
         $farmer_phone = $_POST['farmer_phone'];
         $coop_address = $_POST['coop_address'];
         $coop_phone = $_POST['coop_phone'];
-        // $coop_id = $_POST['coop_id'];
         $farmer_reg_no = $_POST['farmer_reg_no'];
         $sql = "INSERT INTO orders (user_id, product_id, qty, ps_id, coop_id, tx_ref, farmer_reg_no) 
                 VALUES (:user_id, :product_id, :qty, :ps_id, :coop_id, :tx_ref, :farmer_reg_no)";
-        // $sql = "INSERT INTO orders (user_id, product_id, qty, ps_id, coop_id, farmer_address, coop_phone,coop_address,tx_ref,farmer_phone, farmer_reg_no) 
-        // VALUES (:user_id, :product_id, :qty, :ps_id, :coop_id, :farmer_address, :coop_phone,:coop_address,:tx_ref,:farmer_phone, :farmer_reg_no)";
         $statement = $db->prepare($sql);
-        // $stmt->execute();
         $statement->bindValue(':user_id', $row['user_id']);
         $statement->bindValue(':qty', $row['qty']);
         $statement->bindValue(':product_id', $row['product_id']);
         $statement->bindValue(':ps_id', $row['ps_id']);
         $statement->bindValue(':coop_id', $coop_id);
-        // $statement->bindValue(':farmer_address', $farmer_address);
-        // $statement->bindValue(':farmer_phone', $farmer_phone);
-        // $statement->bindValue(':coop_address', $coop_address);
         $statement->bindValue(':tx_ref', $tx_ref);
-        // $statement->bindValue(':coop_phone', $coop_phone);
         $statement->bindValue(':farmer_reg_no', $farmer_reg_no);
         $statement->execute();
+
+        if($statement->rowCount() > 0){
+          // Update Stock in stock mgt
+          $cur_sto = "SELECT id, stock, ps_id, coop_id FROM stock_mgt WHERE ps_id = :ps_id AND coop_id = :coop_id";
+          $cur_stock = $db->prepare($cur_sto);
+          $cur_stock->execute(
+            array(
+              'ps_id'=>$row['ps_id'],
+              'coop_id'=>$_SESSION['cooperative']
+            )
+          );
+          if($cur_stock->rowCount() > 0){
+            $curr = $cur_stock->fetch(PDO::FETCH_ASSOC);
+            $curre_st = (int)$curr['stock'];
+            $new_st = $curre_st - (int)$row['qty'];
+            $stoc = "UPDATE stock_mgt SET stock = :stock WHERE ps_id = :ps_id AND coop_id = :coop_id";
+            $stock = $db->prepare($stoc);
+            $stock->bindValue(':stock', $new_st);
+            $stock->bindValue(':ps_id', $row['ps_id']);
+            $stock->bindValue(':coop_id', $_SESSION['cooperative']);
+            $stock->execute();
+
+
+            // Update Stock in Product size stock
+
+            $ps_sto = "SELECT id, stock FROM products_size WHERE id = :id";
+            $ps_stock = $db->prepare($ps_sto);
+            $ps_stock->execute(
+              array(
+                'id'=>$row['ps_id']
+              )
+            );
+            $pro_size = $ps_stock->fetch(PDO::FETCH_ASSOC);
+            $product_size_stock = (int)$pro_size['stock'] - (int)$row['qty'];
+
+
+            $ps_st = "UPDATE products_size SET stock = :stock WHERE id = :id";
+            $new_ps_stock = $db->prepare($ps_st);
+            $new_ps_stock->bindValue(':stock', $product_size_stock);
+            $new_ps_stock->bindValue(':id', $row['ps_id']);
+            $new_ps_stock->execute();
+            // remove cart items
+            $sql = "DELETE FROM cart WHERE user_id = :user_id";
+            $stmt = $db->prepare($sql);
+            $stmt->execute(
+              array(
+                'user_id'=>$_SESSION['un_id']
+              )
+            );
+            // if($stmt->rowCount() == 1){
+          }else{
+            echo "<script language='javascript'>";
+            echo "if(!alert('No Stock for that product at the moment')){
+              window.location.replace('./checkout');
+            }";
+            echo "</script>";
+          }
+            // $decoded = json_decode($resp, true);
+            // $redirect = $decoded['meta']['authorization']['redirect'];
+            // header('Location: '.$redirect);
+
+
+        }else{
+          echo "<script language='javascript'>";
+          echo "if(!alert('Error')){
+            window.location.replace('./checkout');
+          }";
+          echo "</script>";
+        }
         // remove cart items
         $sql = "DELETE FROM cart WHERE user_id = :user_id";
         $stmt = $db->prepare($sql);
@@ -293,6 +362,12 @@ if(isset($_POST['place_order'])){
     <div id="pre-loader">
         <img src="assets/images/loader.gif" alt="Loading..." />
     </div>
+    <style>
+      .form-control{
+        font-size: 12px!important; 
+        height: 30px;
+      }
+    </style>
     <div class="pageWrapper">
       <!--Search Form Drawer-->
       <div class="search">
